@@ -1,12 +1,45 @@
 {
-  "pages":[
+  "pages": [
+    "pages/_home/_home",
+    "pages/_record/_record",
+    "pages/_setting/_setting",
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "resources/public/bluetooth/bluetooth"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
-  }
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#00ff00",
+    "backgroundColor": "#0000ff",
+    "borderStyle": "#black",
+    "list": [
+      {
+        "pagePath": "pages/_home/_home",
+        "text": "首页",
+        "iconPath": "resources/static/images/homememu/home.png",
+        "selectedIconPath": "resources/static/images/homememu/home-actived.png"
+      },
+      {
+        "pagePath": "pages/_record/_record",
+        "text": "记录",
+        "iconPath": "resources/static/images/homememu/record.png",
+        "selectedIconPath": "resources/static/images/homememu/record-actived.png"
+      },
+      {
+        "pagePath": "pages/_setting/_setting",
+        "text": "设置",
+        "iconPath": "resources/static/images/homememu/more.png",
+        "selectedIconPath": "resources/static/images/homememu/more-actived.png"
+      }
+    ],
+    "position": "bottom"
+  },
+  "networkTimeout": {},
+  "debug": {}
 }
