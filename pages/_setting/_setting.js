@@ -19,7 +19,8 @@ Page({
         value: {},
         pages: [{ url: 'infohead', name:"修改头像" },
           { url: 'infoname', name:"修改昵称" },
-          { url: 'infophone', name:"修改电话" }]
+          { url: 'infophone', name:"修改电话" },
+          { url: 'logout', name: "退出" }]
       }
     ]
   },
