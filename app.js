@@ -120,12 +120,10 @@ App({
           wx.createBLEConnection({
             deviceId: wx.getStorageSync('tooth').deviceId,
             success: function(res) {
-              
+              console.log(JSON.stringify(res));
             },
           })
         }
-
-
       }, fail: function (res) {
         //接口调用失败的回调函数
         wx.showModal({

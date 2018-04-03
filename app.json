@@ -1,23 +1,26 @@
 {
   "pages": [
+    "pages/testbluetooth/index",
+    "pages/testbluetooth/detail",
+    "pages/splash/splash",
     "pages/_home/_home",
     "pages/_record/_record",
     "pages/_setting/_setting",
     "pages/index/index",
-    "pages/logs/logs",
     "resources/public/bluetooth/bluetooth"
   ],
   "window": {
+    "navigationBarBackgroundColor": "#e61773",
+    "navigationBarTitleText": "随身吸二代",
+    "navigationBarTextStyle": "light",
+    "backgroundColor": "#e61773",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+    "enablePullDownRefresh": true
   },
   "tabBar": {
-    "color": "#000000",
-    "selectedColor": "#00ff00",
-    "backgroundColor": "#0000ff",
-    "borderStyle": "#black",
+    "color": "#666666",
+    "selectedColor": "#e61773",
+    "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/_home/_home",

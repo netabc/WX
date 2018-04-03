@@ -1,0 +1,18 @@
+<!--pages/test/testserver.wxml-->
+<view class="section">
+  <input class='input' placeholder="请输入用户Id" bindinput='userid' auto-focus/>
+</view>
+
+<view class="section">
+  <input class='input' placeholder="输入监测数据" bindinput='inputdata' focus="{{focus}}" />
+</view>
+
+<view class="btn-area">
+    <button bindtap="sendData">保存</button>
+</view>
+
+
+<view class="btn-area">
+    <button bindtap="getData">读取</button>
+</view>
+

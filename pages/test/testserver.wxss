@@ -1,0 +1,12 @@
+/* pages/test/testserver.wxss */
+.input{
+    padding: 3rpx 20rpx;
+    border-radius: 4px;
+    border:2px;
+    margin: 12px;
+    background-color: #ccc;
+    color: #fff;
+}
+button{
+  width: 120px;
+}
