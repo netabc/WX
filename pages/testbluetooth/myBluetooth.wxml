@@ -1,0 +1,41 @@
+<!--pages/testbluetooth/myBluetooth.wxml-->
+蓝牙是否可用 <switch checked="{{available}}" bindchange="switch1Change"/>
+
+<button bindtap='sreachBluetooth'>搜索蓝牙</button>
+
+
+
+<view class="sreach">
+     <block wx:for="{{deviceArray}}" wx:for-item="item">
+        <view class="device_box" data-deviceId="{{item.ID}}" data-deviceName="{{item.name}}" catchtap="onLianTap">
+            <view class='device_NI'>
+                <view class="device_name">{{item.name}}</view>
+                <view class="device_id">{{item.ID}}</view>
+            </view>
+            <view class='device_RSSI'>
+                <text>{{item.RSSI}}</text>
+            </view>
+        </view>
+    </block> 
+</view>
+<view class='work'>
+  <label class='line'><text>发送指令：</text><input class='inputss' bindinput="sendValue" ></input></label>
+  
+  <button bindtap='sendData' >发送 蓝牙命令</button>
+  
+  <view>
+    <text>接受蓝牙/发送到服务</text>
+    <textarea class='moreline' value="{{recv_value}}" bindinput="sendServerData"></textarea>
+  </view>
+  <view class='line'>
+    <text>userid</text>
+    <input class='inputss' bindinput="sendServerId" value="{{send_server_Id}}"></input>
+  </view>
+</view>
+<view class='network'>
+  <label>
+   <button  bindtap='sendServer'>发送到服务器</button>
+   <button bindtap='readServer'>读取服务器</button>
+   <textarea class='moreline' value="{{recv_server_value}}"></textarea>
+  </label>
+</view>

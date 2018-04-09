@@ -1,0 +1,62 @@
+/* pages/testbluetooth/myBluetooth.wxss */
+
+.device_box{
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+}
+.device_name{
+    font-size: 42rpx;
+    color: #333;
+    margin-bottom: 5px;
+}
+.device_id{
+    font-size: 34rpx;
+    color: #666;
+}
+.device_RSSI{
+    font-size: 32rpx;
+    color: #666;
+    float: right;
+    padding-right: 20px;
+    margin-top: 20px;
+    vertical-align: middle
+    
+}
+.device_NI{
+    display: inline-block
+}
+.line{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.inputss{
+  border: lightgrey;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 14px;
+  border-radius: 5px;
+  height: 31px;
+  padding-left: 10px;
+}
+.moreline{
+    width: 90%;
+    height: 140px;
+    border: 2px solid #39beff;
+    margin: 0 auto 10px;
+    padding: 5px;
+}
+.send_btn {
+    background-color: #eee;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    float: right;
+}
+.send_btn:active{
+    background-color: #d4d4d4;
+}

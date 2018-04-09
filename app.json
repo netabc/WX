@@ -1,8 +1,6 @@
 {
   "pages": [
-    "pages/testbluetooth/index",
-    "pages/testbluetooth/detail",
-    "pages/splash/splash",
+    "pages/testbluetooth/myBluetooth",
     "pages/_home/_home",
     "pages/_record/_record",
     "pages/_setting/_setting",

@@ -108,81 +108,21 @@ var getBluetooth = function (app) {
 }
 App({
   onLaunch: function () {
-    var tooth = getBluetooth(this);
-    this.globalData.bluetooth = tooth;
-    var code = wx.openBluetoothAdapter({
-      success: function (res) {//成功则返回本机蓝牙适配器状态
-        //是否正在搜索设备 discovering
-        //蓝牙适配器是否可用available
-        //成功：ok，错误：详细信息 errMsg
-        console.log("discovering:" + res.discovering + ">>available:" + res.available + ">>错误信息:" + JSON.stringify(res.errMsg));
-        if(tooth){
-          wx.createBLEConnection({
-            deviceId: wx.getStorageSync('tooth').deviceId,
-            success: function(res) {
-              console.log(JSON.stringify(res));
-            },
-          })
-        }
-      }, fail: function (res) {
-        //接口调用失败的回调函数
-        wx.showModal({
-          title: '欢迎光临!',
-          content: res.errMsg,
-          showCancel: false,
-          confirmColor: '#007aff',
-          success: function () {
-          }
-        })
-      }, complete: function (res) {
-        //接口调用结束的回调函数（调用成功、失败都会执行）
-        wx.showModal({
-          title: '欢迎光临!',
-          content: res.errMsg,
-          showCancel: false,
-          confirmColor: '#007aff',
-          success: function () {
-          }
-        })
-      }
-    });
-    console.log('App Launch booltooth'+code);
+    this.initBluetooth();
   },
   onShow: function () {
     console.log('App Show')
   },
   onHide: function () {
-    console.log('App Hide')
-    if (this.discovery) {
-      wx.stopBluetoothDevicesDiscovery({
-        success: function(res) {},
-        complete:function(res){
-          wx.closeBluetoothAdapter({
-            success: function (res) {
-
-            }, fail: function () {
-
-            }
-          });
-        }
-      });
-    }else{
-      wx.closeBluetoothAdapter({
-        success: function (res) {
-
-        }, fail: function () {
-
-        }
-      });
-    }
-   
+    this.closeBluetooth();
   },
   globalData: {
     hasLogin: false,
     openid: null,
     bluetooth: {},
     discovery: true,
-    userInfo: {}
+    userInfo: {},
+    available:false,
   },
   getUserInfo: function (cb) {
     var that = this
@@ -222,5 +162,79 @@ App({
   },
   requestUrl: function (url) {
     return "http://127.0.0.1:3000/OLife" + url;
+  },
+  initBluetooth: function () {
+    var that = this;
+    wx.showLoading({
+      title: '初始化蓝牙',
+    })
+    wx.openBluetoothAdapter({
+      success: function (res) {
+        console.log("初始化蓝牙成功");
+        wx.getBluetoothAdapterState({
+          success: function (res) {
+            if (res.available) {
+              that.toast("蓝牙可用");
+            } else {
+              that.toast("蓝牙不可用");
+            }
+            typeof that.globalData.myCallback == "function"&&that.globalData.myCallback(res.available);
+          },
+        })
+        wx.onBluetoothAdapterStateChange(function (res) {
+         
+          if (res.available) {
+            that.toast("蓝牙可用");
+          } else {
+            that.toast("蓝牙不可用");
+          }
+          typeof that.globalData.myCallback == "function" && that.globalData.myCallback(res.available);
+        })
+      },
+      fail: function () {
+        that.showErrorMsg("请打开蓝牙", function () {
+          console.log("正在重试 重新打开蓝牙");
+          that.initBluetooth()
+        });
+      }, complete: function () {
+        wx.hideLoading();
+      }
+    })
+  },
+  closeBluetooth: function () {
+    wx.closeBluetoothAdapter({
+      success: function (res) {
+        console.log("关闭成功");
+      }, fail: function () {
+        console.log("关闭失败");
+      }
+    })
+  },
+  toast: function (msg) {
+    wx.showToast({
+      title: msg,
+      duration: 1000,
+      mask: true,
+      success: function (res) { },
+      fail: function (res) { },
+      complete: function (res) { },
+    })
+  },
+  showErrorMsg: function (err, callback) {
+    wx.showModal({
+      title: '错误',
+      content: err,
+      success: function (res) {
+        if (res.confirm) {
+          console.log('确定')
+          callback();
+          typeof callback == "function" &&
+            console.log('确定');
+        } else if (res.cancel) {
+          console.log('取消')
+          typeof callback == "function";
+        }
+      }
+    })
   }
 })

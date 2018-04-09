@@ -225,3 +225,12 @@ form{
   left: 50%;
   transform: translate(-50%, -50%);
 }
+/*蓝牙 .container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei";
+}  */

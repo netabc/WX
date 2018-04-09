@@ -8,6 +8,7 @@ var calculate = require('../../utils/calculate.js');
 var cart = require('../../utils/cart.js');
 // 引入promise
 var Promise = require('../../lib/es6-promise.min.js'); 
+
 class Cart {
     constructor(pageContext){
         this.page = pageContext; //获取页面上下文

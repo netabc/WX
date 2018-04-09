@@ -1,6 +1,9 @@
 //index.js
 //获取应用实例
 var app = getApp()
+app.data.callback=function(){
+
+}
 Page({
     data: {
         motto: 'Hello World',
