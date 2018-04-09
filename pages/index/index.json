@@ -1,1 +1,6 @@
-{}
+{
+  "enablePullDownRefresh": false,
+	"usingComponents": {
+    "bluetooth": "../../resources/public/bluetooth/bluetooth"
+  }
+}
