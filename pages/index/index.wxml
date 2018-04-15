@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <view class="container">
+    <view class='bluetoothState'> <label>蓝牙是否打开:</label> <switch  disabled='false' checked='{{bluetoothState}}'/><button bindtap='searchDevice' loading='{{searching}}' size='mini'>搜索</button></view>
     <bluetooth id='dialog' 
       title='蓝牙搜索' 
       content='恭喜你，学会了小程序组件' 
@@ -9,5 +10,5 @@
       bind:confirmEvent="_confirmEvent">
     </bluetooth>
     
-    <button type="primary" bindtap="showDialog"> ClickMe! </button>
+    <!-- <button type="primary" bindtap="showDialog"> ClickMe! </button> -->
 </view>

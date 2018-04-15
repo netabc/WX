@@ -1,12 +1,12 @@
 {
   "pages": [
-    "pages/testbluetooth/myBluetooth",
+   
     "pages/index/index",
     "pages/splash/splash",
     "pages/_home/_home",
     "pages/_record/_record",
-    "pages/_setting/_setting"
-    
+    "pages/_setting/_setting",
+    "pages/testbluetooth/myBluetooth"
   ],
   "window": {
     "navigationBarBackgroundColor": "#e61773",

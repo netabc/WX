@@ -1,4 +1,5 @@
 /**index.wxss**/
+
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -18,4 +19,13 @@
 
 .usermotto {
   margin-top: 200px;
+}
+
+.bluetoothState {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+.bluetoothState button {
+  margin-right: 0px;
 }
