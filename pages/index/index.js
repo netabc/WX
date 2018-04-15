@@ -27,6 +27,14 @@ Page({
           interval:0,
           success: function(res) {
             console.log("附近的蓝牙外围设备" + JSON.stringify(res));
+            setTimeout(function(){
+              _wx.stopBluetoothDevicesDiscovery({
+                success: function(res) {
+                  console.log("结束查找")
+                  this.setData({ searching: false })
+                }
+              })
+            },60*1000);
           }, 
           fail:function(res){
             console.log("附近的蓝牙外围设备 搜索失败" + JSON.stringify(res));
@@ -86,12 +94,13 @@ Page({
           arr.push(device);
         } else {
           arr.forEach(function (value, index, array){
-            if (arr[index].deviceId != device.deviceId){
+            if (arr[index].devices[0].deviceId != device.devices[0].deviceId){
               arr.push(device);
             }
           });
         }
         console.log("所有设备:" + JSON.stringify(arr))
+        that.dialog.setData({devicesList:arr});
         that.setData({ devicesList: arr});
       });
     },function(){

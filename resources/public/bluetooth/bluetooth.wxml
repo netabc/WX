@@ -3,12 +3,21 @@
 <view class='wx_dialog_container' hidden="{{!isShow}}">
     <view class='wx-mask'></view>
     <view class='wx-dialog'>
+    
+    
         <view class='wx-dialog-title'>{{ title }}</view>
-        <view class='wx-dialog-content'>{{ content }}</view>
-        <view class='wx-dialog-content'>{{ content }}</view>
-        <view class='wx-dialog-content'>{{ content }}</view>
-        <view class='wx-dialog-content'>{{ content }}</view>
-        <view class='wx-dialog-content'>{{ content }}</view>
+        <block wx:for="{{devicesList}}" wx:for-item="item">
+          <view class="device_box" data-deviceId="{{item.devices[0].deviceId}}" data-deviceName="{{item.devices[0].name}}" catchtap="onLianTap">
+            <view class='device_NI'>
+                <view class="device_name">{{item.devices[0].name}}</view>
+                <view class="device_id">{{item.devices[0].deviceId}}</view>
+            </view>
+            <view class='device_RSSI'>
+                <text>{{item.RSSI}}</text>
+            </view>
+        </view>
+        </block> 
+        <!-- <view class='wx-dialog-content' catchtap='onclick'></view> -->
         <view class='wx-dialog-footer'>
           <view class='wx-dialog-btn' catchtap='_cancelEvent'>{{ cancelText }}</view>
           <view class='wx-dialog-btn' catchtap='_confirmEvent'>{{ confirmText }}</view>
