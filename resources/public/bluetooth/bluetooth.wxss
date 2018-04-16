@@ -82,3 +82,14 @@
     -webkit-transform: scaleX(0.5);
     transform: scaleX(0.5);
 }
+
+.device_box{
+    background: #FF83FA;
+    align-items: center;
+    height: 60px;
+    margin: 0 2px 0 0;
+}
+.device_NI{
+    display: inline-block
+}
+

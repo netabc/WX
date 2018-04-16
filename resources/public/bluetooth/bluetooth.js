@@ -1,7 +1,7 @@
 // resources/public/bluetooth/bluetooth.js
 //import User from '../utils/login'
 
-const util = require('utils/utils.js')
+// const util = require('utils/utils.js')
 Component({
   options: {
     multipleSlots: true // 在组件定义时的选项中启用多slot支持
@@ -74,13 +74,18 @@ Component({
       //触发取消回调
       this.triggerEvent("cancelEvent")
       
-      util.initBluetooth();
+      // util.initBluetooth();
       
     },
     _confirmEvent(){
       //触发成功回调
       this.triggerEvent("confirmEvent");
-      util.findDevices();
+      // util.findDevices();
+    },
+    chooseBlue(e){
+      //选择了蓝牙
+      typeof this.page.chooseBlue === 'function' && 
+      this.page.chooseBlue(e.currentTarget.dataset.deviceid, e.currentTarget.dataset.devicename);
     }
   },
  

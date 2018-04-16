@@ -1,14 +1,27 @@
 <!--index.wxml-->
 <view class="container">
-    <view class='bluetoothState'> <label>蓝牙是否打开:</label> <switch  disabled='false' checked='{{bluetoothState}}'/><button bindtap='searchDevice' loading='{{searching}}' size='mini'>搜索</button></view>
-    <bluetooth id='dialog' 
-      title='蓝牙搜索' 
-      content='恭喜你，学会了小程序组件' 
-      cancelText='取消' 
-      confirm='谢谢你'
-      bind:cancelEvent="_cancelEvent"  
-      bind:confirmEvent="_confirmEvent">
-    </bluetooth>
-    
-    <!-- <button type="primary" bindtap="showDialog"> ClickMe! </button> -->
+  <view wx:if="{{page ==0}}" class="gongneng">
+    <view class='bluetoothState'>
+      <label>蓝牙是否打开:</label>
+      <switch disabled='false' checked='{{bluetoothState}}' />
+      <button bindtap='searchDevice' loading='{{searching}}' size='mini'>搜索</button>
+    </view>
+    <view wx:if="{{currentDevice.deviceId}}" class='bluetoothState'>
+      <label>选中的设备:</label>
+      <text>{{currentDevice.deviceId}}</text>
+      <text>{{currentDevice.state}}</text>
+      <button bindtap='connectDevice' size='default'>连接</button>
+    </view>
+    <view class='bluetoothState' wx:if="{{currentDevice.state}}">
+      <label>开始测试:</label>
+      <button  bindtap='checkUp' size='mini'>测试</button>
+    </view>
+    <bluetooth id='dialog' title='蓝牙搜索' content='蓝牙搜索中......' cancelText='取消' confirm='确定' bind:cancelEvent="_cancelEvent" bind:confirmEvent="_confirmEvent">
+  </bluetooth>
+  </view >
+  <view wx:elif="page ==1" >
+
+  </view>
+
+  <!-- <button type="primary" bindtap="showDialog"> ClickMe! </button> -->
 </view>

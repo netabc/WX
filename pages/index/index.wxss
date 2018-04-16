@@ -24,6 +24,7 @@
 .bluetoothState {
   display: flex;
   align-items: center;
+  height: 100px;
   padding: 5px 10px;
 }
 .bluetoothState button {
