@@ -16,25 +16,24 @@ Page({
       wx.closeBLEConnection({
         deviceId: that.data.currentDevice.deviceId,
         complete: function (res) {
-          that.showErrorMsg(JSON.stringify("ssssss"));
+          console.log("关闭"+that.data.currentDevice.deviceId+"连接成功")
           return res;
         }
       });
     }
-    that.showErrorMsg(JSON.stringify("res"));
     _wx.createBLEConnection({
       deviceId: that.data.currentDevice.deviceId,
       success: function (res) {
         console.log(JSON.stringify(res));
-        that.setData({ currentDevice: { state: "已连接" } });
-        that.showErrorMsg(JSON.stringify("@@@"));
+        that.setData({ currentDevice: { state: "已连接",connected: true} });
       }, fail: function (res) {
         that.setData({ currentDevice: { state: false } });
-        that.showErrorMsg(JSON.stringify("1111"));
       }
     }).then(function () {
+      console.log(1)
+      console.log(that.data.currentDevice.deviceId);
       wx.getBLEDeviceServices({
-        deviceId: 'that.data.currentDevice.deviceId',
+        deviceId: that.data.currentDevice.deviceId,
         success: function (service) {
           console.log(JSON.stringify(service));
           var all_UUID = service.services;    //取出所有的服务
@@ -52,65 +51,67 @@ Page({
         },
       })
     }).then(function () {
-      wx.getBLEDeviceCharacteristics({
-        deviceId: that.data.currentDevice.deviceId,
-        serviceId: that.data.currentDevice.serviceId,
-        success: function (res) {
-          var characteristics = res.characteristics;      //获取到所有特征值
-          var characteristics_length = characteristics.length;    //获取到特征值数组的长度
-          console.log('获取到特征值', characteristics);
-          console.log('获取到特征值数组长度', characteristics_length);
-          /* 遍历数组获取notycharacteristicsId */
-          for (var index = 0; index < characteristics_length; index++) {
-            var noty_characteristics_UUID = characteristics[index].uuid;    //取出特征值里面的UUID
-            var characteristics_slice = noty_characteristics_UUID.slice(4, 8);   //截取4到8位
-            /* 判断是否是我们需要的FEE1 */
-            if (characteristics_slice == 'FEE1' || characteristics_slice == 'fee1') {
-              var index_uuid = index;
-              that.setData({
-                currentDevice: {
-                  notycharacteristicsId: characteristics[index_uuid].uuid,    //需确定要的使能UUID
-                  characteristicsId: characteristics[index_uuid].uuid         //暂时确定的写入UUID
-                }
-              });
-            }
-          }
-          /* 遍历获取characteristicsId */
-          for (var index = 0; index < characteristics_length; index++) {
-            var characteristics_UUID = characteristics[index].uuid;    //取出特征值里面的UUID
-            var characteristics_slice = characteristics_UUID.slice(4, 8);   //截取4到8位
-            /* 判断是否是我们需要的FEE2 */
-            if (characteristics_slice == 'FEE2' || characteristics_slice == 'fee2') {
-              var index_uuid = index;
-              that.setData({
-                currentDevice: {
-                  characteristicsId: characteristics[index_uuid].uuid         //暂时确定的写入UUID
-                }
-              });
-            }
-          }
-          console.log('使能characteristicsId', that.data.currentDevice.notycharacteristicsId);
-          console.log('写入characteristicsId', that.data.currentDevice.characteristicsId);
-        },
+      console.log(2)
+      // wx.getBLEDeviceCharacteristics({
+      //   deviceId: that.data.currentDevice.deviceId,
+      //   serviceId: that.data.currentDevice.serviceId,
+      //   success: function (res) {
+      //     var characteristics = res.characteristics;      //获取到所有特征值
+      //     var characteristics_length = characteristics.length;    //获取到特征值数组的长度
+      //     console.log('获取到特征值', characteristics);
+      //     console.log('获取到特征值数组长度', characteristics_length);
+      //     /* 遍历数组获取notycharacteristicsId */
+      //     for (var index = 0; index < characteristics_length; index++) {
+      //       var noty_characteristics_UUID = characteristics[index].uuid;    //取出特征值里面的UUID
+      //       var characteristics_slice = noty_characteristics_UUID.slice(4, 8);   //截取4到8位
+      //       /* 判断是否是我们需要的FEE1 */
+      //       if (characteristics_slice == 'FEE1' || characteristics_slice == 'fee1') {
+      //         var index_uuid = index;
+      //         that.setData({
+      //           currentDevice: {
+      //             notycharacteristicsId: characteristics[index_uuid].uuid,    //需确定要的使能UUID
+      //             characteristicsId: characteristics[index_uuid].uuid         //暂时确定的写入UUID
+      //           }
+      //         });
+      //       }
+      //     }
+      //     /* 遍历获取characteristicsId */
+      //     for (var index = 0; index < characteristics_length; index++) {
+      //       var characteristics_UUID = characteristics[index].uuid;    //取出特征值里面的UUID
+      //       var characteristics_slice = characteristics_UUID.slice(4, 8);   //截取4到8位
+      //       /* 判断是否是我们需要的FEE2 */
+      //       if (characteristics_slice == 'FEE2' || characteristics_slice == 'fee2') {
+      //         var index_uuid = index;
+      //         that.setData({
+      //           currentDevice: {
+      //             characteristicsId: characteristics[index_uuid].uuid         //暂时确定的写入UUID
+      //           }
+      //         });
+      //       }
+      //     }
+      //     console.log('使能characteristicsId', that.data.currentDevice.notycharacteristicsId);
+      //     console.log('写入characteristicsId', that.data.currentDevice.characteristicsId);
+      //   },
 
-      })
+      // })
     }).then(function () {
-      wx.notifyBLECharacteristicValueChange({
-        deviceId: that.data.currentDevice.deviceId,
-        serviceId: that.data.currentDevice.serviceId,
-        characteristicId: that.data.currentDevice.characteristicsId,
-        state: true,
-        success: function (res) {
-          console.log(JSON.stringify(res));
-        },
-      })
-      wx.onBLECharacteristicValueChange(function (res) {
-        var length_hex = [];
-        var turn_back = "";
-        var result = res.value;
-        var hex = that.buf2hex(result);
-        console.log('返回的值', hex);
-      });
+      console.log(3)
+      // wx.notifyBLECharacteristicValueChange({
+      //   deviceId: that.data.currentDevice.deviceId,
+      //   serviceId: that.data.currentDevice.serviceId,
+      //   characteristicId: that.data.currentDevice.characteristicsId,
+      //   state: true,
+      //   success: function (res) {
+      //     console.log(JSON.stringify(res));
+      //   },
+      // })
+      // wx.onBLECharacteristicValueChange(function (res) {
+      //   var length_hex = [];
+      //   var turn_back = "";
+      //   var result = res.value;
+      //   var hex = that.buf2hex(result);
+      //   console.log('返回的值', hex);
+      // });
     });
   },
   //选择蓝牙保存
