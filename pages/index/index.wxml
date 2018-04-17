@@ -6,13 +6,13 @@
       <switch disabled='false' checked='{{bluetoothState}}' />
       <button bindtap='searchDevice' loading='{{searching}}' size='mini'>搜索</button>
     </view>
-    <view wx:if="{{currentDevice.deviceId}}" class='bluetoothState'>
+    <view wx:if="{{currentDeviceId}}" class='bluetoothState'>
       <label>选中的设备:</label>
-      <text>{{currentDevice.deviceId}}</text>
-      <text>{{currentDevice.state}}</text>
+      <text>{{currentDeviceId}}</text>
+      <text>{{currentState}}</text>
       <button bindtap='connectDevice' size='default'>连接</button>
     </view>
-    <view class='bluetoothState' wx:if="{{currentDevice.state}}">
+    <view class='bluetoothState' wx:if="{{currentConnected}}">
       <label>开始测试:</label>
       <button  bindtap='checkUp' size='mini'>测试</button>
     </view>
