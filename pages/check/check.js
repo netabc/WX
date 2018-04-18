@@ -13,6 +13,7 @@ Page({
     // 页面显示  
     var that =this;
     bar.addOnListener(function(){
+      bar.stop();
       that.setData({ pc: "结束"});
     });
   },
@@ -23,16 +24,24 @@ Page({
     // 页面关闭  
   },
   pauseContinue:function(e){
-    console.log("sss");
     if (this.data.pc=="暂停"){
       bar.puase();
-      this.setData({ pc: "开始" });
-    }else if(this.data.pc=="开始"){
+      this.setData({ pc: "继续" });
+    } else if (this.data.pc =="继续"){
       bar.restart();
       this.setData({ pc: "暂停" });
-    }else if(this.data.pc=="结束"){
+    }
+  },
+  start:function(){
+    if (this.data.pc == "结束") {
       this.setData({ pc: "开始" });
       // bar.animation();
+      bar.stop();
+    } else if (this.data.pc == "开始") {
+      bar.start();
+      bar.animation();
+      this.setData({ pc: "暂停" });
     }
+     
   }
 })

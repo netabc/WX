@@ -1,8 +1,9 @@
 <!--pages/check/check.wxml-->
 <view class="wrap">  
  <view class="top">
-  <canvas class="cir" style="width:212px; height:212px;" canvas-id="canvasArc">  
-  </canvas>  
-   <view  bindtap='pauseContinue'>{{pc}}</view> 
- </view>  
+  <canvas class="cir" style="width:212px; height:212px;" canvas-id="canvasArc"  bindtouchstart='pauseContinue'>  
+  </canvas>
+  <view class='cc' bindtap='start'>{{pc}}</view>  
+ </view>
+  
 </view>
