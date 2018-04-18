@@ -1,7 +1,8 @@
 /* pages/check/check.wxss */
 .cir{  
  display: inline-block;  
- margin-top: 140px;  
+ margin-top: 140px; 
+ z-index: 11;  
 }  
    
 .top{  
@@ -11,5 +12,5 @@
 .cc{  
     
  margin-top: -120px;  
-    
+  z-index: 21;  
 }

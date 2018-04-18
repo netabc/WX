@@ -1,0 +1,76 @@
+class ProgressBar {
+  constructor(id) {
+    //id, x, y, r, start, end, bool
+    this.id = id;
+    // this.x = Number(obj.x);
+    // this.y = Number(obj.y);
+    // this.r = Number(obj.r);
+    // this.start = Number(obj.start);
+    // this.end = Number(obj.end);
+    // this.bool = Boolean(obj.bool);
+    this.cxt_arc = wx.createCanvasContext(id);//创建并返回绘图上下文context对象。
+    this.number = 0;
+    this.bg = "#d2d2d2"//渐变
+    this.fg = "#3ea6ff"
+
+    this.maxWidth = this.cxt_arc.width;
+    this.maxHeight = this.cxt_arc.height;
+    this.isDrawing = true;
+  }
+  draw(number){
+    
+    // console.log("xx" + this.maxWidth)
+    if(!this.isDrawing){
+      return;
+    }
+    this.number = number
+    this.cxt_arc.setLineWidth(10);//设置线条的宽度
+    this.cxt_arc.setStrokeStyle(this.bg);//设置边框颜色 默认颜色
+    this.cxt_arc.setLineCap('round');//设置线条的端点样式
+    this.cxt_arc.arc(106, 106, 100, 0, 2 * Math.PI, false);//设置一个原点(106,106)，半径为100的圆的路径到当前路径
+    this.cxt_arc.stroke();//对当前路径进行描边
+    this.cxt_arc.setLineWidth(10);
+    this.cxt_arc.setStrokeStyle(this.fg);
+    this.cxt_arc.setLineCap('round')
+    this.cxt_arc.beginPath();//开始一个新的路径  
+    
+    this.cxt_arc.arc(106, 106, 100, 0, Math.PI * number/180, false);
+    this.cxt_arc.stroke();//对当前路径进行描边  
+    this.cxt_arc.draw();
+     
+    if(number==360){
+      this.number =0;
+      this.puase();
+      typeof this.callback == 'function' && this.callback()
+    }
+ 
+  }
+  
+  puase(){
+    this.isDrawing =false;
+  }
+
+  start(num){
+    this.isDrawing = true
+    this.draw(num)
+  }
+  addOnListener(callback){
+    this.callback = callback;
+  }
+  restart(){
+    this.isDrawing = true
+    this.animation()
+  }
+  animation(){
+    if(this.isDrawing){
+      var that = this;
+      this.number += 2;
+      this.start(this.number)
+      setTimeout(function () {
+        that.animation();
+      }, 20);
+    }
+    
+  }
+}
+export default ProgressBar;
