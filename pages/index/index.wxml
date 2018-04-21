@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class="container">
-  <view wx:if="{{page ==0}}" class="gongneng">
+  <view wx:if="{{page ==0||page ==1}}" class="gongneng">
     <view class='bluetoothState'>
       <label>蓝牙是否打开:</label>
       <switch disabled='false' checked='{{bluetoothState}}' />
@@ -19,9 +19,9 @@
     <bluetooth id='dialog' title='蓝牙搜索' content='蓝牙搜索中......' cancelText='取消' confirm='确定' bind:cancelEvent="_cancelEvent" bind:confirmEvent="_confirmEvent">
   </bluetooth>
   </view >
-  <view wx:elif="page ==1" >
+  <!-- <view wx:elif="page ==1" >
 
-  </view>
+  </view> -->
 
   <!-- <button type="primary" bindtap="showDialog"> ClickMe! </button> -->
 </view>

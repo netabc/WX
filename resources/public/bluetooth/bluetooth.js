@@ -17,23 +17,23 @@ Component({
       value: '标题'     // 属性初始值（可选），如果未指定则会根据类型选择一个
     },
     // 弹窗内容
-    content :{
-      type : String ,
-      value : '弹窗内容'
+    content: {
+      type: String,
+      value: '弹窗内容'
     },
     // 弹窗取消按钮文字
-    cancelText :{
-      type : String ,
-      value : '取消'
+    cancelText: {
+      type: String,
+      value: '取消'
     },
     // 弹窗确认按钮文字
-    confirmText :{
-      type : String ,
-      value : '确定'
-    } 
+    confirmText: {
+      type: String,
+      value: '确定'
+    }
   },
-  observer: function (newVal, oldVal) { 
-    console.log("old="+oldVal+" new="+newVal);
+  observer: function (newVal, oldVal) {
+    console.log("old=" + oldVal + " new=" + newVal);
   },
   /**
    * 私有数据,组件的初始数据
@@ -41,7 +41,7 @@ Component({
    */
   data: {
     // 弹窗显示控制
-    isShow:false
+    isShow: false
   },
 
   /**
@@ -54,39 +54,39 @@ Component({
      */
 
     //隐藏弹框
-    hideDialog(){
+    hideDialog() {
       this.setData({
         isShow: !this.data.isShow
       })
     },
     //展示弹框
-    showDialog(){
+    showDialog() {
       this.setData({
         isShow: !this.data.isShow
       })
       // this.observer(true, false);
     },
-     /*
-     * 内部私有方法建议以下划线开头
-     * triggerEvent 用于触发事件
-     */
-    _cancelEvent(){
+    /*
+    * 内部私有方法建议以下划线开头
+    * triggerEvent 用于触发事件
+    */
+    _cancelEvent() {
       //触发取消回调
       this.triggerEvent("cancelEvent")
-      
+
       // util.initBluetooth();
-      
+
     },
-    _confirmEvent(){
+    _confirmEvent() {
       //触发成功回调
       this.triggerEvent("confirmEvent");
       // util.findDevices();
     },
-    chooseBlue(e){
+    chooseBlue(e) {
       //选择了蓝牙
-      typeof this.page.chooseBlue === 'function' && 
-      this.page.chooseBlue(e.currentTarget.dataset.deviceid, e.currentTarget.dataset.devicename);
+      typeof this.page.chooseBlue === 'function' &&
+        this.page.chooseBlue(e.currentTarget.dataset.deviceid, e.currentTarget.dataset.devicename);
     }
   },
- 
+
 })

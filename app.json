@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/check/check",
     "pages/index/index",
+    "pages/check/check",
     "pages/splash/splash",
     "pages/_record/_record",
     "pages/_setting/_setting",

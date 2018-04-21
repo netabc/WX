@@ -8,6 +8,7 @@ Page({
   },
   onReady: function () {
     // this.aa(0);
+    bar.show();
   },
   onShow: function () {
     // 页面显示  

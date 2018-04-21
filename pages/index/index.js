@@ -1,6 +1,7 @@
 //index.js
 
 import _wx from '../../utils/wxutils.js';
+var checkManager = require("../../resources/public/bluetooth/CheckManager.js");
 //获取应用实例
 const app = getApp()
 Page({
@@ -31,8 +32,8 @@ Page({
       }
     });
   },
-  write16: function(data) {
-    var that =this;
+  write16: function (data) {
+    var that = this;
     if (data.length > 20) {
       var write_array = [];
       console.log('长度大于20', value);
@@ -95,20 +96,104 @@ Page({
     if (that.data.write_ascii) {
       value_initial_exceed = that.asciiTo16(value_initial);
     }
-    
+
     that.write16(value_initial_exceed);
   },
+
   readBlue: function (data) {
     var that = this;
     console.log("ReadData:" + JSON.stringify(data));
     var hex = that.buf2hex(data);
     console.log('返回的值hex', hex);
+    if (hex != '0xff') {
+      that.data.receiveData.push(hex);
+      if (that.data.receiveData.length > 0) {
+        var temp = "";
+        for (var i = 0; i < that.data.receiveData.length; i++) {
+          temp += that.data.receiveData[i]
+        }
+        var start = temp.indexOf('0x2a');
+        var end = temp.indexOf('0x0a');
+        if (end > start) {
+          var arr = temp.substring(start, end).split(' ');
+          var val = []
+          val[5]=0;
+          for (var i = 0; i < 6; i++) {
+            // var f = parseFloat(parseInt(arr[2 + (i * 4)], 16) + "." + parseInt(arr[3 + (i * 4)], 16) + parseInt(arr[4 + (i * 4)], 16))
+            var f = parseFloat(String.fromCharCode(arr[2 + (i * 4)]) + "." + String.fromCharCode(arr[3 + (i * 4)]) + String.fromCharCode(arr[4 + (i * 4)]))
+            val[i] = f
+            val[5] += f
+          }
+          if (2.10 - val[0] >= 0.2 || 2.10 - val[1] >= 0.2 ||
+            2.10 - val[2] >= 0.2 || 2.10 - val[3] >= 0.2 ||
+            2.10 - val[4] >= 0.2) {
+            if(!that.isStart){
+              that.writeBlue('bb');
+              that.isStart = true;
+              setTimeout(function () {
+                that.writeBlue('aa');
+                
+              }, 100)
+              
+            }
+          }
+        }
+        if (hex.indexOf('0x0a')>0){
+          if (that.isStart){
+            setTimeout(function(){
+              that.writeBlue('aa');
+            },100)
+          }
+        }
+      }
+
+    }
+
+
+
+
+    // setTimeout(function () {
+    // if (that.data.receiveData) {
+    //   var temp = "";
+    //   for (var i = 0; i < that.data.receiveData.length; i) {
+    //     temp += that.data.receiveData[i]
+    //   }
+
+    //   var arr = temp.substring(temp.indexOf('2a'), temp.indexOf('0a')).split(' ');
+    //   var val = []
+    //   for (var i = 0; i < 6; i++) {
+
+    //     var f = parseFloat(parseInt(arr[2 + (i * 4)], 16) + "." + parseInt(arr[3 + (i * 4)], 16) + parseInt(arr[4 + (i * 4)], 16))
+    //     val[i] = f
+    //     val[5] += f
+    //   }
+
+
+    // if (2.10 - val[0] >= 0.2 || 2.10 - val[1] >= 0.2 ||
+    //   2.10 - val[2] >= 0.2 || 2.10 - val[3] >= 0.2 ||
+    //   2.10 - val[4] >= 0.2) {
+    // setTimeout(function () {
+    //   that.writeBlue('bb');
+    //   setTimeout(function () {
+    //     that.wirteDD();
+    //   }, 1000);
+    // }, 1000);
+    // }
+    // }
+    // }, 200);
   },
   //检查身体
   checkUp: function (e) {
     var that = this;
     that.setData({ page: 1 })
-    that.writeBlue('01');
+    that.isStart = false;
+    that.writeBlue('aa');
+    // that.writeBlue('bb');
+  },
+  wirteDD: function () {
+    var that = this;
+    that.writeBlue('aa');
+    setTimeout(that.wirteDD, 50);
   },
   //连接蓝牙
   connectDevice: function () {
@@ -201,7 +286,7 @@ Page({
                   state: true,
                   success: function (res) {
                     console.log("notifyBLECharacteristicValueChange改变：" + JSON.stringify(res));
-                    
+
                   },
                 })
               },
@@ -342,9 +427,10 @@ Page({
     //     })
     //   });
   },
-  onShow:function(){
+  onShow: function () {
+    checkManager.getInstance().init();
     var that = this;
-    if (!this.data.bluetoothState){
+    if (!this.data.bluetoothState) {
       this.bluetoothState()
         .then(function () {
           console.log("状态监听")
@@ -400,7 +486,7 @@ Page({
     console.log('你点击了确定');
     this.dialog.hideDialog();
   },
-  data: { page: 0 },
+  data: { page: 0, receiveData: [] },
   showErrorMsg: function (err, callback) {
     wx.showModal({
       title: '错误',
@@ -410,7 +496,7 @@ Page({
   },
   //转成十六进制
   buf2hex: function (buffer) { // buffer is an ArrayBuffer
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join(' ');
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ("0x"+('00' + x.toString(16)).slice(-2))).join(' ');
   },
   asciiTo16: function (assii) {
     var value_ascii = "";

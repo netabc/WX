@@ -6,27 +6,14 @@ class ProgressBar {
     this.number = 0;
     this.bg = "#d2d2d2"//渐变
     this.fg = "#3ea6ff"
-    this.cxt_arc.setLineWidth(6);
-    this.cxt_arc.setStrokeStyle('#d2d2d2');
-    this.cxt_arc.setLineCap('round')
-    this.cxt_arc.beginPath();//开始一个新的路径  
-    this.cxt_arc.arc(106, 106, 100, 0, 2 * Math.PI, false);//设置一个原点(106,106)，半径为100的圆的路径到当前路径  
-    this.cxt_arc.stroke();//对当前路径进行描边  
-
-    this.cxt_arc.setLineWidth(6);
-    this.cxt_arc.setStrokeStyle('#3ea6ff');
-    this.cxt_arc.setLineCap('round')
-    this.cxt_arc.beginPath();//开始一个新的路径  
-    this.cxt_arc.arc(106, 106, 100, -Math.PI * 1 / 2, Math.PI * 6 / 5, false);
-    this.cxt_arc.stroke();//对当前路径进行描边  
-
-    this.cxt_arc.draw(); 
     this.isDrawing = true;
     // this.draw(0)
 
   }
+  show(){
+    this.draw(0);
+  }
   draw(number){
-    
     // console.log("xx" + this.maxWidth)
     if(!this.isDrawing){
       return;
@@ -82,7 +69,7 @@ class ProgressBar {
   stop(){
     this.isDrawing =false;
     this.number = 0;
-    this.draw(0);
+    // this.draw(0);
   }
 }
 export default ProgressBar;
