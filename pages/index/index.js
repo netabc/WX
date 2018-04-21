@@ -428,7 +428,7 @@ Page({
     //   });
   },
   onShow: function () {
-    checkManager.getInstance().init();
+    console.log(checkManager.getInstance().init());
     var that = this;
     if (!this.data.bluetoothState) {
       this.bluetoothState()
