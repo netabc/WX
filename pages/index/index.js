@@ -1,7 +1,7 @@
 //index.js
 
 import _wx from '../../utils/wxutils.js';
-var checkManager = require("../../resources/public/bluetooth/CheckManager.js");
+import checkManager from "../../resources/public/bluetooth/CheckManager.js";
 //获取应用实例
 const app = getApp()
 Page({
@@ -66,7 +66,6 @@ Page({
     var that = this;
     var write_array = [];
     var charCodeAt = [];
-
     var recv_value_ascii = "";
     var string_value = "";
     var recve_value = "";
@@ -110,7 +109,7 @@ Page({
       if (that.data.receiveData.length > 0) {
         var temp = "";
         for (var i = 0; i < that.data.receiveData.length; i++) {
-          temp += that.data.receiveData[i]
+          temp += ' '+that.data.receiveData[i]
         }
         var start = temp.indexOf('0x2a');
         var end = temp.indexOf('0x0a');
@@ -118,7 +117,7 @@ Page({
           var arr = temp.substring(start, end).split(' ');
           var val = []
           val[5]=0;
-          for (var i = 0; i < 6; i++) {
+          for (var i = 0; i < 5; i++) {
             // var f = parseFloat(parseInt(arr[2 + (i * 4)], 16) + "." + parseInt(arr[3 + (i * 4)], 16) + parseInt(arr[4 + (i * 4)], 16))
             var f = parseFloat(String.fromCharCode(arr[2 + (i * 4)]) + "." + String.fromCharCode(arr[3 + (i * 4)]) + String.fromCharCode(arr[4 + (i * 4)]))
             val[i] = f
@@ -132,19 +131,22 @@ Page({
               that.isStart = true;
               setTimeout(function () {
                 that.writeBlue('aa');
-                
-              }, 100)
+                that.data.isLLL = true;
+              }, 200)
               
             }
           }
-        }
-        if (hex.indexOf('0x0a')>0){
-          if (that.isStart){
-            setTimeout(function(){
-              that.writeBlue('aa');
-            },100)
+          if (that.data.isLLL)
+          if (hex.indexOf('0x0a') > 0) {
+            if (that.isStart) {
+              setTimeout(function () {
+                that.data.receiveData = [];
+                that.writeBlue('aa');
+              }, 200)
+            }
           }
         }
+        console.log("返回的数据>>>" + JSON.stringify(temp));
       }
 
     }
@@ -355,8 +357,6 @@ Page({
         showCancel: false
       })
     }
-
-
   },
   /**
    * 获取蓝牙状态
@@ -428,7 +428,8 @@ Page({
     //   });
   },
   onShow: function () {
-    console.log(checkManager.getInstance().init());
+    // checkManager.init();
+    console.log(JSON.stringify(checkManager));
     var that = this;
     if (!this.data.bluetoothState) {
       this.bluetoothState()

@@ -1,3 +1,4 @@
+import checkManager from "resources/public/bluetooth/CheckManager.js";
 App({
   onLaunch: function () {
    // this.initBluetooth();
@@ -5,6 +6,11 @@ App({
   },
   onShow: function () {
    // console.log('App Show')
+    checkManager.addOnAdapterStateListener(function(state){
+      console.log("初始化状态:"+state);
+    });
+    checkManager.init();
+    console.log(JSON.stringify(checkManager.getBlueState()));
   },
   onHide: function () {
     //this.closeBluetooth();
@@ -56,53 +62,6 @@ App({
   requestUrl: function (url) {
     return "http://127.0.0.1:3000/OLife" + url;
   },
-  // initBluetooth: function () {
-  //   var that = this;
-  //   wx.showLoading({
-  //     title: '初始化蓝牙',
-  //   })
-  //   wx.openBluetoothAdapter({
-  //     success: function (res) {
-  //       console.log("初始化蓝牙成功");
-  //       wx.getBluetoothAdapterState({
-  //         success: function (res) {
-  //           if (res.available) {
-  //             that.toast("蓝牙可用");
-  //           } else {
-  //             that.toast("蓝牙不可用");
-  //           }
-  //           typeof that.globalData.myCallback == "function"&&that.globalData.myCallback(res.available);
-  //         },
-  //       })
-  //       wx.onBluetoothAdapterStateChange(function (res) {
-         
-  //         if (res.available) {
-  //           that.toast("蓝牙可用");
-  //         } else {
-  //           that.toast("蓝牙不可用");
-  //         }
-  //         typeof that.globalData.myCallback == "function" && that.globalData.myCallback(res.available);
-  //       })
-  //     },
-  //     fail: function () {
-  //       that.showErrorMsg("请打开蓝牙", function () {
-  //         console.log("正在重试 重新打开蓝牙");
-  //         that.initBluetooth()
-  //       });
-  //     }, complete: function () {
-  //       wx.hideLoading();
-  //     }
-  //   })
-  // },
-  // closeBluetooth: function () {
-  //   wx.closeBluetoothAdapter({
-  //     success: function (res) {
-  //       console.log("关闭成功");
-  //     }, fail: function () {
-  //       console.log("关闭失败");
-  //     }
-  //   })
-  // },
   toast: function (msg) {
     wx.showToast({
       title: msg,

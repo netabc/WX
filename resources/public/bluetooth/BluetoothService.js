@@ -17,10 +17,9 @@ class Bluetooth {
     this.isWirteable = false//写入值
     this.cacheData=[];//缓存读取到的值
     this.isReading =true;//正在读取中
+
+    // this.addOnAdapterStateListener = this.addOnAdapterStateListener.bind(this);
   }
-  // static getInstance() {
-  //   instance = new Instance();
-  // }
   /**
    * 写入到特征中的数据
    */
@@ -144,7 +143,7 @@ class Bluetooth {
         deviceId: deviceId,
         success: function (res) {
           that.isConnected = true
-          typeof this.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+          typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
           wx.getBLEDeviceServices({
             deviceId: deviceId,
             success: function (res) {
@@ -156,14 +155,14 @@ class Bluetooth {
           })
         }, fail: function (res) {
           that.isConnected = false
-          typeof this.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+          typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
         }, complete: function () {
           typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
         }
       })
       wx.onBLEConnectionStateChange(function (res) {
         that.isConnected = res.connected
-        typeof this.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+        typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
       })
 
     } else {
@@ -281,10 +280,10 @@ class Bluetooth {
         wx.getBluetoothAdapterState({
           success: function (res) {
             that.isCanUsed = true
-            typeof this.OnAdapterStateListener === 'function' && this.OnAdapterStateListener(that.isCanUsed)
+            typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
           }, fail: function (res) {
             that.isCanUsed = false
-            typeof this.OnAdapterStateListener === 'function' && this.OnAdapterStateListener(that.isCanUsed)
+            typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
           },
           complete(res) {
             that.print("蓝牙状态", res)
@@ -296,15 +295,13 @@ class Bluetooth {
         wx.onBluetoothAdapterStateChange(function (res) {
           console.log("蓝牙状态改变:", res)
           that.isCanUsed = res.available
-          typeof this.OnAdapterStateListener === 'function' && this.OnAdapterStateListener(that.isCanUsed)
+          typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
         })
-
       } else {
         that.isCanUsed = false;
-        typeof this.OnAdapterStateListener === 'function' && this.OnAdapterStateListener(that.isCanUsed)
-        that.print("初始化", res)
+        that.print("初始化", isInit)
+        typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
       }
-
     });
   }
   /**
@@ -414,8 +411,11 @@ class Bluetooth {
     return hexArr.join(' ');
   }
   buf2hex(buffer){
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join(' ');
+    return Array.prototype.map.call(
+      new Uint8Array(buffer), 
+      bit => ('00' + bit.toString(16)).slice(-2)).join(' ');
   }
+  
 }
 
 export default Bluetooth;
