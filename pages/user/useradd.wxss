@@ -1,0 +1,104 @@
+/* pages/user/useradd.wxss */
+
+.user-head {
+  display: flex;
+  justify-content: center;
+  background: rgb(13, 176, 155);
+  padding-top: 10%;
+  padding-bottom: 10%;
+  border-bottom: 5px solid rgba(255, 255, 255, 0.6);
+}
+
+.head-outer-recycle {
+  display: flex;
+  justify-content: center;
+  width: 185rpx;
+  height: 185rpx;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: rgba(13, 176, 155, 1);
+}
+
+.head-inner-recycle {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  width: 155rpx;
+  height: 155rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-head image {
+  margin: auto;
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+}
+
+.user-content {
+  background-color: #fff;
+}
+
+.user-form radio-group {
+  height: auto;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 5px solid #e4e4e4;
+}
+
+.user-form .radio-flex {
+  display: flex;
+  width: 100%;
+  background: white;
+}
+
+.radio-flex .one {
+  border-right: 2px solid #e4e4e4;
+}
+
+.radio-flex .two {
+  border-left: 2px solid #e4e4e4;
+}
+
+.user-form .radio-flex .adio-flex_item {
+  text-align: center;
+  padding: 5px 0;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  color: #e4e4e4;
+}
+
+.adio-flex_item image {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 10rpx;
+  margin-bottom: -5rpx;
+}
+
+.adio-flex_item label.active{
+  color: #111111;
+  /* border-bottom: 2px solid #111111; */
+}
+.user_input{
+  padding-top: 30rpx;
+  padding-left: 200rpx;
+  border-bottom: 5px solid #e4e4e4;
+  padding-bottom: 50rpx;
+}
+.inputView{
+  font-size: 32rpx;
+  display: flex;
+  line-height: 80rpx;
+  justify-content:flex-start;
+  align-items:baseline;
+}
+.inputView .input{
+  margin-left: 36rpx;
+  background: #fff;
+  padding: 20rpx 0px;
+  border-bottom: 2rpx solid #e4e4e4; 
+}

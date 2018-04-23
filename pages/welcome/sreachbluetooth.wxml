@@ -1,0 +1,29 @@
+<!--pages/welcome/sreachbluetooth.wxml-->
+<view >
+   <view  class='sblue-container' style='height:{{winHeight}}px;'>
+    <view class='sblue-head'>
+      <image src='image/bluetooth.png' />
+      <text>可用设备</text>
+    </view>
+    <view  class='sblue-content' >
+      <view class='sblue-list'>
+        <block wx:key="unique" wx:for='{{devices}}' wx:for-index="index" wx:for-item="device">
+          <view wx:if='{{device.id==currentId}}' class='sblue-item selected' data-id='{{device.id}}' data-deviceName='{{device.deviceName}}' data-deviceId='{{device.deviceId}}' bindtap='connectTo'>
+              <image src='image/bluetooth.png'/>
+              <text>{{device.deviceName}}</text>
+              <text class='sblue-connect'  >{{device.isConnect}}</text>
+              <view class='next'/>
+          </view>
+          <view wx:else class='sblue-item' data-deviceName='{{device.deviceName}}' data-id='{{device.id}}' data-deviceId='{{device.deviceId}}' bindtap='connectTo'>
+              <image src='image/bluetooth.png'/>
+              <text>{{device.deviceName}}</text>
+              <text class='sblue-connect' >{{device.isConnect}}</text>
+              <view class='next'/>
+          </view>
+         </block>
+      </view>
+    </view>
+  </view>
+</view>
+
+

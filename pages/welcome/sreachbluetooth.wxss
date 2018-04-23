@@ -1,0 +1,68 @@
+/* pages/welcome/sreachbluetooth.wxss */
+.sblue-container{
+  background-image:url("https://attach.bbs.miui.com/forum/201707/28/073243w13q7298t1nwnz96.jpg.thumb.jpg");
+	background-size:cover;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  color:white;
+}
+.sblue-head{
+  margin-top: 40%;
+  padding-left: 10%;
+  background: rgba(255,255,255,0.3);
+  display:flex;
+  align-items: center;
+  font-size: 48rpx;
+  font: bold;
+}
+.sblue-head image{
+  height: 96rpx;
+  width: 96rpx;
+  border-radius: 48rpx;
+  background: #000817;
+  margin:20rpx;
+}
+.sblue-content{
+  padding-left: 10%;
+  margin-top: 20rpx;
+}
+.sblue-item{
+  padding: 32rpx 24rpx;
+  display:flex;
+  align-items: center;
+  font-size: 36rpx;
+  font: bold;
+  
+}
+.sblue-connect{
+  width: auto;
+  position: absolute;
+  vertical-align:auto;
+  font-size: 36rpx;
+  font: bold;
+  right:64rpx;
+}
+.sblue-item.selected{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  background: rgba(255,255,255,0.3);
+}
+.sblue-content image{
+   height: 48rpx;
+   width: 48rpx;
+   margin-left: 24rpx;
+   margin-right: 24rpx;
+   border: 1rpx rgba(255,255,255,0.3) solid;
+}
+
+.next {
+  width: 24rpx;
+  height: 24rpx;
+  position: absolute;
+  right:24rpx;
+  border-top: 4rpx solid rgba(255,255,255,0.3);
+  border-right: 4rpx solid rgba(255,255,255,0.3);
+  transform: rotate(45deg);
+}

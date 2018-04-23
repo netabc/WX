@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/welcome/sreachbluetooth",
+    "pages/welcome/welcome",
+    "pages/main/main",
+    "pages/user/userchoose",
+    "pages/user/useradd",
+    "pages/index/index",
+    "pages/logs/logs"
+    
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#353535",
+    "navigationBarTitleText": "随身吸二代",
+    "navigationBarTextStyle": "light",
+    "backgroundColor": "#353535",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false
+  }
+}

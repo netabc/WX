@@ -1,0 +1,58 @@
+<!--pages/user/useradd.wxml-->
+<view class="user-container">
+  <view class="user-head">
+    <view>
+      <view class='head-outer-recycle'>
+        <view class='head-inner-recycle'>
+          <image src="image/heart.png">
+          </image>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='user-content'>
+    <form class='user-form' bindsubmit="listenFormSubmit" bindreser="listenFormReser">
+      <view>
+        <radio-group name="radio-group" bindchange="radioChange">
+          <view class='radio-flex'>
+            <view class="adio-flex_item one">
+            <image id='woman-image' src='{{woman_image_url}}' />
+              <label class="{{radioCheckVal==1?'active':''}}">女
+              <radio  id='woman' value="1" hidden='true'/>
+              </label>
+            </view>
+            <view class="adio-flex_item two ">
+              <image id='man-image' src='{{man_image_url}}' />
+              <label class="{{radioCheckVal==2?'active':''}}">男
+                <radio id='man' value="2" hidden='true'/>
+              </label>
+            </view>
+          </view>
+        </radio-group>
+      </view>
+      <view class='user_input'>
+        <view class="inputView">
+          <label>姓名：</label>
+          <input class="input" name="username" type='text' value="{{userInfo.username}}" placeholder="请输入姓名" placeholder-style="color: gray" />
+        </view>
+        <view wx:if="{{userInfo.phone}}" class="inputView">
+          <label>手机：</label>
+          <input class="input" name="phone" type='number' value="{{userInfo.phone}}" placeholder="请输入手机号码" placeholder-style="color: gray" />
+        </view>
+        <view class="inputView">
+          <label>生日：</label>
+          <input class="input" name="birthday" type='text' value="{{userInfo.birthday}}" placeholder="请输入生日" placeholder-style="color: gray" />
+        </view>
+        <view class="inputView">
+          <label>身高：</label>
+          <input class="input" name="height" type='number' value="{{userInfo.height}}" placeholder="请输入身高" placeholder-style="color: gray" />
+        </view>
+        <view class="inputView">
+          <label>体重：</label>
+          <input class="input" name="weight" type='number' value="{{userInfo.weight}}" placeholder="请输入体重" placeholder-style="color: gray" />
+        </view>
+      </view>
+      <button class='userbutton' formType="submit" type="primary" style='background-color:rgb(13, 176, 155);color: #ffffff; border-color: #ff8719;margin:80rpx 80rpx 0rpx 80rpx;box-shadow:0px 5px 5px rgba(13, 176, 155,0.4);' >确认</button>
+    </form>
+  </view>
+</view>

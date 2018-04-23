@@ -1,0 +1,30 @@
+<view class='hostory-container'>
+  <view class='hostory-head'>
+    <view class='hostory-table'>
+
+    </view>
+    <view class='hostory-toast'>
+
+    </view>
+  </view>
+  <view class='hostory-content'>
+    <view class='hostory-content-item' style='display:black'>
+      <text>三月 2018</text>
+      <text>平均: 86</text>
+      <image src='../hostory/image/allow_down.png' style='width:24px;height:24px'></image>
+    </view>
+    <view class='hostory-content-item'>
+      <text>二月 2018</text>
+      <text>平均: 86</text>
+      <image src='../hostory/image/allow_up.png' style='width:24px;height:24px'></image>
+      <view>
+        <text>095</text>
+        <view>
+          <text>常规设置</text>
+          <text>2018/3/4 11:58</text>
+          <image src='../hostory/image/progress-bar-line.png' style='width:320px;height:10px' />
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

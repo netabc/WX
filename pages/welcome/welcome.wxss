@@ -1,0 +1,38 @@
+/* pages/welcome/welcome.wxss */
+
+.welcome-container {
+  width: 100%;
+  background: blue;
+  position: relative;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 48px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 15rpx;
+  position: absolute;
+  left: 80rpx;
+  right: 80rpx;
+  bottom: 240rpx;
+}
+.welcome-head {
+  padding-top: 160rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64rpx;
+  color: white;
+}
+.welcome-content image {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle; /* 居中对齐， */
+}
+.welcome-content label {
+  vertical-align: middle;
+  margin-left: 20rpx;
+  color: white;
+}

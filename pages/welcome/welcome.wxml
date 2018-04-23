@@ -1,0 +1,13 @@
+<view>
+  <view wx:if="{{!bluetoothState}}" class='welcome-container' style='height:{{winHeight}}px;'>
+    <view class='welcome-head'>
+      <text>该如何开始</text>
+    </view>
+    <view  class='welcome-content' bindtap='sreachBlue'>
+      <view>
+        <image src='image/bluetooth.png' />
+        <label>请打开蓝牙</label>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,40 @@
+/* pages/user/userchoose.wxss */
+.userchoose-container{
+  height: 100%;
+  width: 100%;
+  font-size: 42rpx;
+  background: rgb(13, 176, 155);
+  color:white;
+  overflow-y:scroll;
+  
+}
+.userchoose-head{
+  padding-top: 60rpx;
+  margin-left: 60rpx;
+}
+.userchoose-container text{
+   font-size: 28rpx;
+}
+.userchoose-content{
+  height: 100%;
+  margin-top: 48rpx;
+}
+.userchoose-item{
+  width: 100%;
+  display:flex;
+  align-items:center;
+}
+.userchoose-item.selected{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  background: rgba(255,255,255,0.3);
+}
+.userchoose-item image{
+  height: 100rpx;
+  width: 100rpx;
+  padding: 30rpx;
+}
+.userchoose-item .user-info{
+  margin-left: 12prx;
+}

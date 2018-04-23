@@ -1,0 +1,41 @@
+<!--pages/user/userchoose.wxml-->
+<view class='userchoose-container' style="height:{{winHeight}}px;">
+  <view class='userchoose-head'>
+      <view>账号选择：</view>
+      <text>请选择一个账号然后进行检测\n若无账号请您填写个人资料进行建档检测</text>
+  </view>
+ 
+  <view class='userchoose-content'>
+    <view class='userchoose-list'>
+      <block wx:key="unique" wx:for='{{userinfos}}' wx:for-index="index" wx:for-item="userinfo">
+        <view wx:if='{{userinfo.id==currentId}}' class="userchoose-item selected" data-id='{{userinfo.id}}' bindtap='userAdd'>
+          <image src='image/head.png' />
+          <view class='user-info'>
+            <view>{{userinfo.username}}</view>
+            <view wx:if='{{userinfo.empty}}'>
+              <text>请填写个人信息</text>
+            </view>
+            <view wx:else>
+              <text class='sex'>{{userinfo.sex}}</text>
+              <text class='birthday'>{{userinfo.birthday}}</text>
+            </view>
+          </view>
+        </view>
+        <view wx:else class="userchoose-item" data-id='{{userinfo.id}}' bindtap='userAdd'>
+          <image src='image/head.png' />
+          <view class='user-info'>
+            <view>{{userinfo.username}}</view>
+            <view wx:if='{{userinfo.empty}}'>
+              <text>请填写个人信息</text>
+            </view>
+            <view wx:else>
+              <text class='sex'>{{userinfo.sex}}</text>
+              <text class='birthday'>{{userinfo.birthday}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+</view>
