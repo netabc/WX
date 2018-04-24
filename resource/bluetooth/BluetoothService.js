@@ -140,6 +140,31 @@ class Bluetooth {
     }
   }
   /**
+   * 断开蓝牙链接
+   */
+  disconnectBlue(deviceid) {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      if (!deviceid){
+        resolve();
+        return ;
+      }
+      wx.closeBLEConnection({
+        deviceId: deviceid,
+        success: function (res) {
+          that.print("断开蓝牙链接：", res)
+          // typeof func === 'function' && func(deviceid)
+          that.isConnected = false;
+          resolve();
+        }, fail: function (res) {
+          resolve();
+        }, complete: function () {
+          typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+        }
+      })
+    });
+  }
+  /**
    * 连接蓝牙
    */
   connectBlue(deviceId) {
@@ -153,34 +178,45 @@ class Bluetooth {
           success: function (res) {
             that.isConnected = true
             typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-            wx.getBLEDeviceServices({
-              deviceId: deviceId,
-              success: function (res) {
-                that.print("所有的service", res);
-                that.services = res.services;
-                typeof that.OnFindServiceListener === 'function' && that.OnFindServiceListener();
-              }, fail: function (res) {
-                that.print("所有的service err", res);
-              }
-            })
-            resolve("true");
+            resolve(true);
           }, fail: function (res) {
             if(res.errCode !=-1){
               that.isConnected = false
             }
-            resolve(false);
+             reject(true);
             typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
           }, complete: function () {
             typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
           }
         })
-        wx.onBLEConnectionStateChange(function (res) {
-          that.isConnected = res.connected
-          typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-        })
-      } else {
-        typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+       
+      }else{
+        reject(true);
       }
+      // else {
+      //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+      // }
+    }).then(function(success){
+      wx.onBLEConnectionStateChange(function (res) {
+        that.isConnected = res.connected
+        typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+      })
+      return new Promise(function(resovle,reject){
+        wx.getBLEDeviceServices({
+          deviceId: deviceId,
+          success: function (res) {
+            that.print("所有的service", res);
+            that.services = res.services;
+            typeof that.OnFindServiceListener === 'function' && that.OnFindServiceListener();
+            resovle(true);
+          }, fail: function (res) {
+            that.print("所有的service err", res);
+            reject(res);
+          }
+        })
+      })
+      }, function (res){
+      that.print("createBLEConnection err", res);
     });
     
    
@@ -213,27 +249,7 @@ class Bluetooth {
       });
     });
   }
-  /**
-   * 断开蓝牙链接
-   */
-  disconnectBlue(deviceid) {
-    var that = this;
-    return new Promise(function(resolve,reject){
-        wx.closeBLEConnection({
-          deviceId: deviceid,
-          success: function (res) {
-            that.print("链接设备成功：", res)
-            // typeof func === 'function' && func(deviceid)
-            that.isConnected = false;
-            resolve();
-          },fail:function(res){
-            resolve();
-          },complete:function(){
-            typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-          }
-        })
-    });
-  }
+  
   /**
    * 重新搜索蓝牙
    */
@@ -258,7 +274,7 @@ class Bluetooth {
     if (that.isCanUsed) {
       typeof that.OnProgressListener === 'function' && that.OnProgressListener(true)
       wx.startBluetoothDevicesDiscovery({
-        services: ['FEE0'],
+        // services: ['FEE0'],
         allowDuplicatesKey: false,
         interval: 0,
         complete: function (res) {

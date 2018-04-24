@@ -39,8 +39,8 @@ class CheckManager {
   }
 
   discoveryDevices() {
-    this.bluetooth.searchBlue();
 
+    this.bluetooth.searchBlue();
   }
 
 
@@ -92,9 +92,8 @@ class CheckManager {
   }
   conncetBlue(deviceId) {
     var that = this;
-    that.bluetooth.disconnectBlue(that.deviceId||'')
-    .then(function(){
-      that.bluetooth.connectBlue(deviceId).then(sta => {
+    that.bluetooth.disconnectBlue(that.deviceId)
+      .then(function () {
         that.bluetooth.addOnFindServiceListener(function () {
           that.getServices().then(uuid => {
             console.log('打开的接口', uuid);
@@ -104,8 +103,9 @@ class CheckManager {
             console.log("特征值提取-->", characteristics);
           });
         });
+        that.bluetooth.connectBlue(deviceId).then(sta => {
+        });
       });
-    });
     that.deviceId = deviceId;
   }
   search() {
@@ -141,16 +141,21 @@ class CheckManager {
     this.bluetooth.addOnReceivedDataListener(callback);
   }
 
-  removeRepait(src) {
-    var res = [];
-    var json = {};
-    for (var i = 0; i < src.length; i++) {
-      if (!json[src[i]]) {
-        res.push(src[i]);
-        json[src[i]] = 1;
+  removeRepait(arr) {
+    let result = [];
+    arr = arr.sort();
+    arr.forEach((device, i) => {
+      if (result.length == 0) {
+        result.push(device)
+      } else {
+        result.forEach((d, j) => {
+          if (d.deviceId != device.deviceId) {
+            result.push(device)
+          }
+        });
       }
-    }
-    return res;
+    })
+    return result;
   }
 }
 export default new CheckManager
