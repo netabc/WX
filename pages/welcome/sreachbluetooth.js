@@ -23,15 +23,12 @@ Page({
     var that =this;
     checkManager.addOnAdapterStateListener(function (isCanUsed) {
       console.log("zhuangtai :" + isCanUsed);
-      if (isCanUsed) {
-        if (!checkManager.getBlueState().isDiscovering)
-          checkManager.discoveryDevices();
-      } else {
-        checkManager.stopSearch();
-      }
+      if (!checkManager.getBlueState().isDiscovering)
+        checkManager.discoveryDevices();
     });
     checkManager.addOnFindDeviceListener(function(){
       checkManager.getDevices().then(devices=>{
+        that.data.devices =[];
         that.setData({ devices: devices});
       });
     });
@@ -41,28 +38,29 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    console.log(JSON.stringify(checkManager.removeRepait([{ bbb: 'ss' }, { bbb: 'ss' }])));
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+    if (!checkManager.getBlueState().isDiscovering)
+      checkManager.discoveryDevices();
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    
+    checkManager.stopSearch();
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    checkManager.stopSearch();
+    
   },
 
   /**
