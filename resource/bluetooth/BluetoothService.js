@@ -2,21 +2,27 @@
 class Bluetooth {
   // static BluetoothSearch = "搜索蓝牙"
   // static instance;
-  
+
   constructor() {
     // if (instance) return instance;
     this.isCanUsed = false;//蓝牙是否可用
     this.isFonding = false;//是否在搜索中
     this.findDevice = null;//已找到的设备
-    this.MaxSearchTime = 10 * 1000//最大搜索时间 ，到了停止搜索
     this.findedDevices = []//所有已找到的设备
+
+    this.discovering = false;
+    this.available = false;
+    this.MaxSearchTime = 10 * 1000//最大搜索时间 ，到了停止搜索
+
+    this.services =[];
+
     this.isConnected = false//是否已经连接
     this.deviceServices = [];//当前所有的服务
     this.characteristics = [];//某个服务的特征值
     this.isReadable = false//读取值
     this.isWirteable = false//写入值
-    this.cacheData=[];//缓存读取到的值
-    this.isReading =true;//正在读取中
+    this.cacheData = [];//缓存读取到的值
+    this.isReading = true;//正在读取中
 
     // this.addOnAdapterStateListener = this.addOnAdapterStateListener.bind(this);
   }
@@ -98,24 +104,26 @@ class Bluetooth {
     var that = this;
     // this.deviceId = deviceId;
     // this.serviceId = serviceId;
-    if (that.isConnected) {
-      wx.getBLEDeviceCharacteristics({
-        deviceId: deviceId,
-        serviceId: serviceId,
-        success: function (res) {
-          that.print("特征值提取", res)
-          that.characteristics = res.characteristics
-          typeof that.OnDeviceCharacteristicListener === 'function' && that.OnDeviceCharacteristicListener(that.characteristics)
+    return new Promise(function(resolve,reject){
+      if (that.isConnected) {
+        wx.getBLEDeviceCharacteristics({
+          deviceId: deviceId,
+          serviceId: serviceId,
+          success: function (res) {
+            that.print("特征值提取", res)
+            that.characteristics = res.characteristics
+            typeof that.OnDeviceCharacteristicListener === 'function' && that.OnDeviceCharacteristicListener(that.characteristics)
+            resolve(that.characteristics);
+          }, fail: function (res) {
+            that.print("特征值提取 err", res);
+          }
+        })
 
-
-        }, fail: function (res) {
-          that.print("特征值提取 err", res);
-        }
-      })
-
-    } else {
-      typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-    }
+      } else {
+        typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+      }
+    });
+    
 
   }
 
@@ -136,43 +144,51 @@ class Bluetooth {
    */
   connectBlue(deviceId) {
     var that = this;
-    // this.deviceId = deviceId;
-    if (that.isCanUsed) {
-      typeof that.OnProgressListener === 'function' && that.OnProgressListener(true)
-      wx.createBLEConnection({
-        deviceId: deviceId,
-        success: function (res) {
-          that.isConnected = true
-          typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-          wx.getBLEDeviceServices({
-            deviceId: deviceId,
-            success: function (res) {
-              that.print("所有的service", res);
-              typeof that.OnFindServiceListener === 'function' && that.OnFindServiceListener(res.services);
-            }, fail: function (res) {
-              that.print("所有的service err", res);
+    return new Promise(function(resolve,reject){
+      // this.deviceId = deviceId;
+      if (that.isCanUsed) {
+        typeof that.OnProgressListener === 'function' && that.OnProgressListener(true)
+        wx.createBLEConnection({
+          deviceId: deviceId,
+          success: function (res) {
+            that.isConnected = true
+            typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+            wx.getBLEDeviceServices({
+              deviceId: deviceId,
+              success: function (res) {
+                that.print("所有的service", res);
+                that.services = res.services;
+                typeof that.OnFindServiceListener === 'function' && that.OnFindServiceListener();
+              }, fail: function (res) {
+                that.print("所有的service err", res);
+              }
+            })
+            resolve("true");
+          }, fail: function (res) {
+            if(res.errCode !=-1){
+              that.isConnected = false
             }
-          })
-        }, fail: function (res) {
-          that.isConnected = false
+            resolve(false);
+            typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+          }, complete: function () {
+            typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
+          }
+        })
+        wx.onBLEConnectionStateChange(function (res) {
+          that.isConnected = res.connected
           typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-        }, complete: function () {
-          typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
-        }
-      })
-      wx.onBLEConnectionStateChange(function (res) {
-        that.isConnected = res.connected
-        typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-      })
-
-    } else {
-      typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
-    }
+        })
+      } else {
+        typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+      }
+    });
+    
+   
   }
-  getConnectedDevices(){
+  getConnectedDevices() {
     var that = this;
     // if (that.isCanUsed) {
-      
+
     // }else{
     //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
     //   return 
@@ -180,15 +196,15 @@ class Bluetooth {
     return new Promise(function (resolve, reject) {
       wx.getConnectedBluetoothDevices({
         success: function (res) {
-          console.log("初始化成功");
           resolve(res);
+          that.print("已经连接的设备", res);
         }, fail: function (res) {
-          console.log("初始化失败");
           resolve(res);
+          that.print("已经连接的设备 error", res);
         }
       })
-    }).then(function(res){
-      return new Promise(function (resolve, reject){
+    }).then(function (res) {
+      return new Promise(function (resolve, reject) {
         if (res.devices) {
           resolve(res.devices);
         } else {
@@ -200,19 +216,23 @@ class Bluetooth {
   /**
    * 断开蓝牙链接
    */
-  disconnectBlue(deviceid, func) {
+  disconnectBlue(deviceid) {
     var that = this;
-    if (that.isConnected) {
-      wx.closeBLEConnection({
-        deviceId: deviceid,
-        success: function (res) {
-          that.print("链接设备成功：", res)
-          typeof func === 'function' && func(deviceid)
-        },
-      })
-    } else {
-      typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
-    }
+    return new Promise(function(resolve,reject){
+        wx.closeBLEConnection({
+          deviceId: deviceid,
+          success: function (res) {
+            that.print("链接设备成功：", res)
+            // typeof func === 'function' && func(deviceid)
+            that.isConnected = false;
+            resolve();
+          },fail:function(res){
+            resolve();
+          },complete:function(){
+            typeof that.OnConnectStateListener === 'function' && that.OnConnectStateListener(that.isConnected)
+          }
+        })
+    });
   }
   /**
    * 重新搜索蓝牙
@@ -221,9 +241,14 @@ class Bluetooth {
     var that = this;
     if (that.isCanUsed) {
       that.stopSearchBlue(that.searchBlue());
-    } else {
-      typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
     }
+    that.disconnectBlue(deviceid)
+    .then(function(){
+      return searchBlue();
+    });
+    // else {
+    //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+    // }
   }
   /**
    * 搜索蓝牙
@@ -233,33 +258,18 @@ class Bluetooth {
     if (that.isCanUsed) {
       typeof that.OnProgressListener === 'function' && that.OnProgressListener(true)
       wx.startBluetoothDevicesDiscovery({
-        // services: [''],
+        services: ['FEE0'],
         allowDuplicatesKey: false,
         interval: 0,
-        success: function (res) {
-          //已找到的蓝牙
-          /**
-           * Bug & Tip
-              tip: Mac系统可能无法获取advertisData及RSSI，请使用真机调试
-              tip: 开发者工具和 Android 上获取到的deviceId为设备 MAC 地址，iOS 上则为设备 uuid。因此deviceId不能硬编码到代码中
-              tip: 若在onBluetoothDeviceFound回调了某个设备，则此设备会添加到 wx.getBluetoothDevices 接口获取到的数组中
-           */
-          wx.onBluetoothDeviceFound(function (res) {
-            that.print("已发现设备：", res)
-            that.isFonding = true;
-            findDevice = res;
-            typeof that.OnFindDeviceListener === 'function' && that.OnFindDeviceListener(res)
-          });
-          setTimeout(that.stopSearchBlue, that.MaxSearchTime);
-        }, fail: function (res) {
-          that.print("已发现设备 error：", res)
-        }, complete: function () {
+        complete: function (res) {
+          that.print("开始扫描....", res)
           typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
         }
       })
-    } else {
-      typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
     }
+    // else {
+    //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+    // }
   }
   /**
    * 停止搜索蓝牙
@@ -277,17 +287,29 @@ class Bluetooth {
               if (typeof resreach === 'function') {
                 resreach();
               } else {
-                typeof that.OnFindedDevicesListener === 'function' && that.OnFindedDevicesListener(res)
+                //typeof that.OnFindedDevicesListener === 'function' && that.OnFindedDevicesListener(res)
               }
             }
           })
         }
       })
-    } else {
-      typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
     }
+    //  else {
+    //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+    // }
   }
-
+  getDeviceServices(){
+    var that = this;
+    return new Promise(function (resole) {
+      resole(that.services);
+    });
+  }
+  getDevices(){
+    var that = this;
+    return new Promise(function(resole){
+      resole(that.findedDevices);
+    });
+  }
   /**
    * 初始化蓝牙设备
    * 
@@ -310,6 +332,38 @@ class Bluetooth {
           success: function (res) {
             that.isCanUsed = true
             typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+            /**
+              * 蓝牙状态监听
+              */
+            wx.onBluetoothAdapterStateChange(function (res) {
+              console.log("蓝牙状态改变:", res)
+              that.isCanUsed = res.available
+              that.available = res.available;
+              that.discovering = res.discovering
+              /**
+                * Bug & Tip
+                  tip: Mac系统可能无法获取advertisData及RSSI，请使用真机调试
+                  tip: 开发者工具和 Android 上获取到的deviceId为设备 MAC 地址，iOS 上则为设备 uuid。因此deviceId不能硬编码到代码中
+                  tip: 若在onBluetoothDeviceFound回调了某个设备，则此设备会添加到 wx.getBluetoothDevices 接口获取到的数组中
+                */
+              typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
+              // if (that.isCanUsed){
+
+              // }
+            })
+            wx.onBluetoothDeviceFound(function (res) {
+              that.print("已发现设备：", res)
+              that.isFonding = true;
+              // 获取在小程序蓝牙模块生效期间所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。
+              wx.getBluetoothDevices({
+                success: function (res) {
+                  that.findDevice =res.devices;
+                  that.pushToArray();
+                  typeof that.OnFindDeviceListener === 'function' && that.OnFindDeviceListener()     
+                },
+              })
+
+            });
           }, fail: function (res) {
             that.isCanUsed = false
             typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
@@ -318,14 +372,7 @@ class Bluetooth {
             that.print("蓝牙状态", res)
           }
         });
-        /**
-        * 蓝牙状态监听
-        */
-        wx.onBluetoothAdapterStateChange(function (res) {
-          console.log("蓝牙状态改变:", res)
-          that.isCanUsed = res.available
-          typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
-        })
+
       } else {
         that.isCanUsed = false;
         that.print("初始化", isInit)
@@ -399,11 +446,11 @@ class Bluetooth {
           console.log('截取到的值', value_initial_send);
           value_initial_exceed = value_initial_exceed.substring(20); //value_initial_exceed替换为取掉前20字节后的数据
           write_array.push(value_initial_send); //将所有截取的值放在一个数组
-        }else{
+        } else {
           write_array.push(value_initial_exceed);
         }
       }
-      write_array.map(function (val, index){
+      write_array.map(function (val, index) {
         var value_set = val
         that.write(value_set)
       })
@@ -416,7 +463,7 @@ class Bluetooth {
    */
   readBlue(raw) {
     this.cacheData.push(raw)
-    var value =this.buf2hex(raw)
+    var value = this.buf2hex(raw)
     // if (value.substring(value.length - 2).toLowerCase()==='0a'){
     //   if (this.isReading){
     //     this.writeBlue("aa");
@@ -439,12 +486,20 @@ class Bluetooth {
     )
     return hexArr.join(' ');
   }
-  buf2hex(buffer){
+  buf2hex(buffer) {
     return Array.prototype.map.call(
-      new Uint8Array(buffer), 
+      new Uint8Array(buffer),
       bit => ('00' + bit.toString(16)).slice(-2)).join(' ');
   }
-  
+  pushToArray() {
+    var that = this;
+    var newDevices = that.findDevice
+    if (newDevices) {
+      newDevices.forEach((device, i) => {
+        that.findedDevices.push(device);
+      });
+    }
+  }
 }
 
 export default Bluetooth;

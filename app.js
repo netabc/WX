@@ -6,7 +6,6 @@ App({
      * 初始化蓝牙设备
      */
     var that = this;
-    checkManager.init();
     checkManager.addOnAdapterStateListener(function (state) {
       console.log("初始化状态:" + state);
       that.globalData.bluetoothState = state;
@@ -15,7 +14,9 @@ App({
   },
   onLaunch: function () {
     var that = this;
-    
+    // var f = parseFloat(String.fromCharCode('0x32') + "." + String.fromCharCode('0x31') + String.fromCharCode('0x36'))
+    // console.log(f);
+    checkManager.init();
     /** 
     * 获取系统信息
     */
