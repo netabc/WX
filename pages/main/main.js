@@ -2,6 +2,7 @@
 //获取应用实例  
 var app = getApp()
 import Bar from "../../resource/progressbar/progressbar.js"
+const Check = require('../check/check.js')
 var bar = new Bar('progressCanvas');
 Page({
   data: {
@@ -17,6 +18,7 @@ Page({
   onLoad: function () {
     var that = this;
     console.log("sssss");
+   
     bar.addOnListener(function () {
       bar.stop();
       that.setData({ state: "开始检测" });
@@ -24,6 +26,11 @@ Page({
   },
   onReady:function(){
     bar.show();
+   
+  },
+  onShow:function(){
+    console.log("连接蓝牙");
+    Check.connectBlue();
   },
 
   /** 

@@ -11,6 +11,7 @@ Page({
     winWidth: app.globalData.winWidth,
     winHeight: app.globalData.winHeight,
     devices: [],
+    lastTime: 0
     // { id: '0', deviceName: '小米2', deviceId: '32:43:32:22:32:32', isConnect: "已连接", },
     // { id: '1', deviceName: '小米3', deviceId: '32:43:32:22:32:32', isConnect: "", },
     // { id: '2', deviceName: '小米4', deviceId: '32:43:32:22:32:32', isConnect: "", }
@@ -20,16 +21,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that =this;
+    var that = this;
     checkManager.addOnAdapterStateListener(function (isCanUsed) {
-      console.log("zhuangtai :" + isCanUsed);
-      if (!checkManager.getBlueState().isDiscovering)
-        checkManager.discoveryDevices();
+      console.log("蓝牙状态 :" + isCanUsed);
+      // if (!checkManager.getBlueState().isDiscovering)
+      //   checkManager.discoveryDevices();
     });
-    checkManager.addOnFindDeviceListener(function(){
-      checkManager.getDevices().then(devices=>{
-        that.data.devices =[];
-        that.setData({ devices: devices});
+    checkManager.addOnFindDeviceListener(function () {
+      checkManager.getDevices().then(devices => {
+        that.data.devices = [];
+        that.setData({ devices: devices });
       });
     });
   },
@@ -38,15 +39,18 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    console.log(JSON.stringify(checkManager.removeRepait([{ bbb: 'ss' }, { bbb: 'ss' }])));
+    // console.log(JSON.stringify(checkManager.removeRepait([{ bbb: 'ss' }, { bbb: 'ss' }])));
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (!checkManager.getBlueState().isDiscovering)
-      checkManager.discoveryDevices();
+    // wx.startPullDownRefresh({})
+    // setTimeout(function () {
+    //   console.log("刷新");
+    //   wx.stopPullDownRefresh();
+    // }, 1 * 1000);
   },
 
   /**
@@ -60,13 +64,21 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    if (!checkManager.getBlueState().isDiscovering){
+      checkManager.discoveryDevices();
+      setTimeout(function () {
+        checkManager.stopSearch();
+        wx.stopPullDownRefresh();
+        console.log("停止");
+      }, 30 * 1000);
+    }
 
   },
 
@@ -81,7 +93,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    checkManager.start();
   },
   connectTo: function (e) {
     console.log("sssssss" + JSON.stringify(e));
@@ -90,12 +102,12 @@ Page({
     this.modifyConnect(e.currentTarget.dataset.id, "正在连接");
     if (checkManager.getBlueState().isDiscovering)
       checkManager.stopSearch();
-    checkManager.addOnProgressListener(function(isShow){
-      if (isShow){
+    checkManager.addOnProgressListener(function (isShow) {
+      if (isShow) {
         wx.showLoading({
           title: '连接中...',
         })
-      }else{
+      } else {
         wx.hideLoading();
       }
     });

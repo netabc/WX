@@ -62,7 +62,7 @@ class Bluetooth {
    * 从特征中读取到的数据
    */
   read(raw) {
-    this.readBlue(raw)
+    this.readBlue(this.buf2hex(raw))
   }
   /**
    * 通知特征改变
@@ -87,7 +87,7 @@ class Bluetooth {
         },
       })
       wx.onBLECharacteristicValueChange(function (res) {
-        that.print("特征值提取", res)
+        that.print("获取值成功：", res)
         var result = res.value
         that.read(result)
       })
@@ -96,6 +96,12 @@ class Bluetooth {
       that.isReadable = false
       that.isWirteable = false;
     }
+  }
+  getReceiveData(){
+    return new Promise(function(resolve,reject){
+      
+      resolve(that.cacheData)
+    });
   }
   /**
    * 获取蓝牙设备某个服务特征值
@@ -216,7 +222,7 @@ class Bluetooth {
         })
       })
       }, function (res){
-      that.print("createBLEConnection err", res);
+        that.print("createBLEConnection err", res);
     });
     
    
@@ -292,24 +298,28 @@ class Bluetooth {
    */
   stopSearchBlue(resreach) {
     var that = this;
-    if (that.isCanUsed) {
-      that.isFonding = false;
-      wx.stopBluetoothDevicesDiscovery({
-        complete: function (res) {
-          typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
-          wx.getBluetoothDevices({
-            success: function (res) {
-              that.print("全部已发现的设备：", res)
-              if (typeof resreach === 'function') {
-                resreach();
-              } else {
-                //typeof that.OnFindedDevicesListener === 'function' && that.OnFindedDevicesListener(res)
-              }
-            }
-          })
-        }
-      })
-    }
+    return new Promise(function(resolve,reject){
+      if (that.isCanUsed) {
+        that.isFonding = false;
+        wx.stopBluetoothDevicesDiscovery({
+          complete: function (res) {
+            typeof that.OnProgressListener === 'function' && that.OnProgressListener(false)
+            resolve();
+            // wx.getBluetoothDevices({
+            //   success: function (res) {
+            //     that.print("全部已发现的设备：", res)
+            //     if (typeof resreach === 'function') {
+            //       resreach();
+            //     } else {
+            //       //typeof that.OnFindedDevicesListener === 'function' && that.OnFindedDevicesListener(res)
+            //     }
+            //   }
+            // })
+          }
+        })
+      }
+    });
+    
     //  else {
     //   typeof that.OnAdapterStateListener === 'function' && that.OnAdapterStateListener(that.isCanUsed)
     // }
@@ -449,7 +459,9 @@ class Bluetooth {
    * 
    */
   writeBlue(data) {
+    
     var that = this;
+    that.print("写入>>>>",data)
     if (data.length > 20) {
       var write_array = [];
       that.print('长度大于20', value);
@@ -477,15 +489,11 @@ class Bluetooth {
   /**
    * 读取蓝牙数据
    */
-  readBlue(raw) {
-    this.cacheData.push(raw)
-    var value = this.buf2hex(raw)
-    // if (value.substring(value.length - 2).toLowerCase()==='0a'){
-    //   if (this.isReading){
-    //     this.writeBlue("aa");
-    //   }
-    // }
-    typeof this.OnReceivedDataListener === 'function' && this.OnReceivedDataListener(raw)
+  readBlue(hex) {
+    this.print("读取<<<<", hex)
+    this.cacheData = ''
+    this.cacheData=hex
+    typeof this.OnReceivedDataListener === 'function' && this.OnReceivedDataListener(hex)
   }
   /** 
   *   打印日志
@@ -505,7 +513,7 @@ class Bluetooth {
   buf2hex(buffer) {
     return Array.prototype.map.call(
       new Uint8Array(buffer),
-      bit => ('00' + bit.toString(16)).slice(-2)).join(' ');
+      bit => ("0x"+('00' + bit.toString(16)).slice(-2))).join(' ');
   }
   pushToArray() {
     var that = this;

@@ -1,14 +1,14 @@
 /* pages/welcome/sreachbluetooth.wxss */
 .sblue-container{
-  background-image:url("https://attach.bbs.miui.com/forum/201707/28/073243w13q7298t1nwnz96.jpg.thumb.jpg");
+  background-color:#000F2D;
 	background-size:cover;
-  position: fixed;
+  /* position: fixed; */
   height: 100%;
   width: 100%;
   color:white;
 }
 .sblue-head{
-  margin-top: 40%;
+  /* margin-top: 40%; */
   padding-left: 10%;
   background: rgba(255,255,255,0.3);
   display:flex;

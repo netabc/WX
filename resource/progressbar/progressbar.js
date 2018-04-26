@@ -5,12 +5,15 @@ class ProgressBar {
     this.cxt_arc = wx.createCanvasContext(id);//创建并返回绘图上下文context对象。
     this.number = 0;
     this.bg = "#d2d2d2"//渐变
-    this.fg = "#3ea6ff"
+    this.fg = "#FF9600"
     this.isDrawing = true;
     this.width = 140;
     this.heigth = 140;
     this.radius = 135;
-    // this.draw(0)
+    // this.gradient = this.cxt_arc.createLinearGradient(200, 100, 100, 200);
+    // this.gradient.addColorStop("0", "#A1D0F8");
+    // this.gradient.addColorStop("0.5", "#3ea6ff");
+    // this.gradient.addColorStop("1.0", "#0289FD");
 
   }
   show() {
@@ -29,17 +32,23 @@ class ProgressBar {
     this.cxt_arc.stroke();//对当前路径进行描边
     
     this.cxt_arc.setLineWidth(10);
+    // this.cxt_arc.setStrokeStyle(this.gradient);
     this.cxt_arc.setStrokeStyle(this.fg);
     this.cxt_arc.setLineCap('round')
     this.cxt_arc.beginPath();//开始一个新的路径  
-    this.cxt_arc.arc(this.width, this.heigth, this.radius, -1 / 2 * Math.PI, Math.PI * number / 180 - 1 / 2 * Math.PI, false);
+    this.cxt_arc.arc(this.width, this.heigth, this.radius, (-1 / 2  ) * Math.PI, 
+      Math.PI * number / 180 - (1 / 2 - 1 / 1440) * Math.PI, false);
     this.cxt_arc.stroke();//对当前路径进行描边 
 
-    this.cxt_arc.setStrokeStyle('#ffffff');//设置边框颜色 默认颜色
-    this.cxt_arc.beginPath();//开始一个新的路径
     this.cxt_arc.setLineWidth(6);
-    this.cxt_arc.arc(this.width, this.heigth, this.radius, Math.PI * number / 180 - 1 / 2 * Math.PI, Math.PI * number / 180 - 1 / 2 * Math.PI, false);
+    // this.cxt_arc.setStrokeStyle(this.gradient);
+    this.cxt_arc.setStrokeStyle('#ffffff');//设置边框颜色 默认颜色
+    this.cxt_arc.setLineCap('round')
+    this.cxt_arc.beginPath();//开始一个新的路径
+    this.cxt_arc.arc(this.width, this.heigth, this.radius, Math.PI * number / 180 + (-1 / 2 - 1 / 1440) * Math.PI, 
+                                                           Math.PI * number / 180 - 1 / 2  * Math.PI, false);
     this.cxt_arc.stroke();
+    
     this.cxt_arc.draw();
 
     // 
