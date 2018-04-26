@@ -1,4 +1,6 @@
 <!--pages/hostory/main.wxml-->
+
+
 <view class="swiper-tab">  
     <view class="swiper-tab-list {{currentTab==0 ? 'on' : ''}}" data-current="0" bindtap="swichNav">历史</view>  
     <view class="swiper-tab-list {{currentTab==1 ? 'on' : ''}}" data-current="1" bindtap="swichNav">检测</view>  
