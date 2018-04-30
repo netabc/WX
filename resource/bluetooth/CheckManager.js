@@ -35,11 +35,11 @@ class CheckManager {
       isReading: this.bluetooth.isWirteable
     };
   }
-  connect(){
-    var that =this;
-    if (that.deviceId){
+  connect() {
+    var that = this;
+    if (that.deviceId) {
       that.conncetBlue(that.deviceId);
-    }else{
+    } else {
       wx.redirectTo({
         url: '../../pages/welcome/sreachbluetooth',
       })
@@ -50,7 +50,7 @@ class CheckManager {
   }
 
   discoveryDevices() {
-    if (this.bluetooth.discovering){
+    if (this.bluetooth.discovering) {
       this.bluetooth.stopSearchBlue();
     }
     this.bluetooth.searchBlue();
@@ -75,6 +75,7 @@ class CheckManager {
     }
   }
   start() {
+    var that = this;
     if (!that.checkStart) {
       that.bluetooth.writeBlue('aa');
       that.checkStart = true;
@@ -172,33 +173,54 @@ class CheckManager {
         if (received.indexOf('0x2a') == 0 && received.lastIndexOf('0x0a') == 85) {
 
           let valuef = that.hex2Float(received);
+          console.log("转成电压值：" + valuef);
           if (2.10 - valuef[0] >= 0.2 || 2.10 - valuef[1] >= 0.2 ||
-            2.10 - valuef[2] >= 0.2 || 2.10 - valuef[3] >= 0.2 ||
-            2.10 - valuef[4] >= 0.2) {
+            2.10 - valuef[2] >= 0.2 || 2.10 - valuef[3] >= 0.2) {//||2.10 - valuef[4] >= 0.2
             if (!that.checkStarting) {
               that.checkStarting = true;
               sendCmd = 'bb';//开始
-            }
-            if (that.checkPause){
+            } 
+            if (that.checkStarting && that.checkPause) {
               sendCmd = 'dd';//继续
-              that.checkPause =false;
+              that.checkPause = false;
             }
-
-          }else{
-            that.checkPause = true;
-            sendCmd = 'cc' //时间计时暂停指令
+          } else {
+            if (!that.checkPause && that.checkStarting) {
+              that.checkPause = true;
+              sendCmd = 'cc' //时间计时暂停指令
+            }
           }
+          that.test = false;
         } else {
-          if (received.indexOf('0xbb') >= 0 || received.indexOf('0xcc') >= 0 || received.indexOf('0xdd') >= 0) {//接收到开始、暂停、继续
-              //暂停
-
+          that.test = false;
+          if (received.indexOf('0xbb') >= 0) {//接收到开始、暂停、继续
+            //暂停
+            // setTimeout(function () {
+            //   that.bluetooth.writeBlue(sendCmd);
+            // }, 50);
+          } else if (received.indexOf('0xcc') >= 0) {
+            // setTimeout(function () {
+            //   that.bluetooth.writeBlue(sendCmd);
+            // }, 50);
+          } else if (received.indexOf('0xdd') >= 0) {
+            // setTimeout(function () {
+            //   that.bluetooth.writeBlue(sendCmd);
+            // }, 50);
           } else {//其他指令
-          
+            that.test = true;
+            return;
           }
           console.log('状态：' + received);
         }
-        
+
         setTimeout(function () {
+          if (that.sss) {
+          } else {
+            that.sss = 0;
+          }
+          if (!that.test)
+            that.sss++;
+          console.log("第" + that.sss + " 次写入");
           that.bluetooth.writeBlue(sendCmd);
         }, 50);
       } else {
@@ -391,6 +413,16 @@ class CheckManager {
     let data = arr.split(' ');
     for (var i = 0; i < valuef.length - 1; i++) {
       var f = parseFloat(String.fromCharCode(data[1 + (i * 3)]) + "." + String.fromCharCode(data[2 + (i * 3)]) + String.fromCharCode(data[3 + (i * 3)]))
+      if (this.sss < 5) {//
+        //模拟不符合条件 手松开
+      } else if (this.sss > 5 && this.sss < 15) {
+        f = f - 0.5;//模拟 符合条件 >=0.2
+      } else if (this.sss < 20) {
+        //模拟不符合条件
+      } else if (this.sss > 30) {
+        f = f - 0.5;//模拟 符合条件 >=0.2
+      }
+
       valuef[i] = f;
       valuef[5] += f;
     }

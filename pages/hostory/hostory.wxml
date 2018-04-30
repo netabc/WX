@@ -1,4 +1,4 @@
-<view class='hostory-container'>
+<view wx:if='{{currentTab==2}}' class='hostory-container'>
   <view class='hostory-head'>
     <view class='hostory-table'>
 

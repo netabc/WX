@@ -1,4 +1,4 @@
-<view class='check-container'>
+<view wx:if="{{currentTab==1}}" class="check-container">
   <view class='check-head'>
     <view class='check-tooch-info'>
       <view class='check-tooch-inner'>
@@ -6,30 +6,47 @@
         <view class='check-tooch-state'>{{state}}</view>
       </view>
       <view class='check-tooch-image'>
-        <image src='../check/image/heart.png'></image> 
+        <image src='../check/image/heart.png'></image>
       </view>
     </view>
-    <view class='check-progress'>
-      <canvas class="progress-circle" style="width:280px; height:280px;" canvas-id="progressCanvas"  bindtouchstart='checkAndStop'>  
+    <view  class="check-progress">
+      <canvas class="progress-circle" style="width:280px; height:280px;" canvas-id="progressCanvas" bindtouchstart='checkAndStop'>
+      <cover-view></cover-view>
       </canvas>
     </view>
-    <view>
-         <canvas class="progress-line " style="width:100%; height:212px;" canvas-id="lineCanvas"></canvas>
-    </view>
   </view>
-  <view class="check-footer">
+  <view class="check-content">
+       <view  class='check-progressline'>
+          <canvas  class="progress-line "  canvas-id="lineCanvas">
+            <cover-view></cover-view>
+          </canvas>
+       </view>
+       <view class='check-last'>
+          <text class='last-label'>最近一次检测</text>
+          <view class='last-label-score'>
+            <view class='label-score-value'><text class='babel-score-value'>0</text><text class='babel-score-label'> 分</text></view>
+            <view class='item-score'>
+                  <text class='score-label'>综合评分</text>
+                  <text class='score-time'>2018/3/4</text>
+                  <progress class='score-progress' percent='70'stroke-width='6' color='#F93C00'/>
+            </view>
+          </view>
+       </view>
+       
+  </view>
+  <view hidden='{{!watchCase}}' class="check-footer">
     <view class='check-footer-label'>
      <text>注意事项</text>
     </view>
     <view class='check-footer-list'>
-        <view>1.孕妇不宜检测</view>
-        <view>2.激烈运动过后，间隔1小时再检测</view>
-        <view>3.饭后间隔 1小时再检测</view>
-        <view>4. 检测前摘下身上所有金属物品和通讯器材</view>
-        <view>5. 佩戴心率调节器者，禁止检测</view>
-        <view>6. 体内植入金属者，禁止检测</view>
+      <view>1.孕妇不宜检测</view>
+      <view>2.激烈运动过后，间隔1小时再检测</view>
+      <view>3.饭后间隔 1小时再检测</view>
+      <view>4. 检测前摘下身上所有金属物品和通讯器材</view>
+      <view>5. 佩戴心率调节器者，禁止检测</view>
+      <view>6. 体内植入金属者，禁止检测</view>
     </view>
 
   </view>
-  
+
 </view>

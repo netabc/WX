@@ -1,13 +1,12 @@
 {
   "pages": [
-    "pages/main/main",
     "pages/welcome/sreachbluetooth",
-    "pages/welcome/welcome",
+    "pages/main/main",
     "pages/user/userchoose",
+    "pages/welcome/welcome",
     "pages/user/useradd",
     "pages/index/index",
     "pages/logs/logs"
-    
   ],
   "window": {
     "navigationBarBackgroundColor": "#353535",
