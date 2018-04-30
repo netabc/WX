@@ -21,6 +21,9 @@ class CheckManager {
       this.bluetooth = new Bluetooth();
     }
     this.devices = [];
+    this.maxLength = 50;
+    this.readCount = 0;
+    this.resultDatas = [];
     console.log("创建了多少次" + (++CheckManager.sss));
   }
   getBlueState() {
@@ -76,10 +79,15 @@ class CheckManager {
   }
   start() {
     var that = this;
+    this.rightCount = 0;
+    this.leftCount = 0;
+    this.readCount = 0;
+    this.sss =0;
     if (!that.checkStart) {
       that.bluetooth.writeBlue('aa');
       that.checkStart = true;
-      setInterval(this.doWhile.bind(this), 100)
+
+      setInterval(this.doWhile.bind(this), 10)
     }
   }
   getConnectedDevice() {
@@ -165,10 +173,11 @@ class CheckManager {
   }
   doWhile() {
     var that = this;
+    that.test = true;
     if (that.isReceiveData) {
       that.isReceiveData = false;
+      let received = that.bluetooth.cacheData;
       if (that.checkStart) {
-        let received = that.bluetooth.cacheData;
         let sendCmd = 'aa';
         if (received.indexOf('0x2a') == 0 && received.lastIndexOf('0x0a') == 85) {
 
@@ -179,7 +188,8 @@ class CheckManager {
             if (!that.checkStarting) {
               that.checkStarting = true;
               sendCmd = 'bb';//开始
-            } 
+              that.checkEnd = false;
+            }
             if (that.checkStarting && that.checkPause) {
               sendCmd = 'dd';//继续
               that.checkPause = false;
@@ -191,6 +201,7 @@ class CheckManager {
             }
           }
           that.test = false;
+          typeof that.OnCheckDataProgressListener === 'function' && that.OnCheckDataProgressListener(that.toReceiveShow(valuef))
         } else {
           that.test = false;
           if (received.indexOf('0xbb') >= 0) {//接收到开始、暂停、继续
@@ -206,30 +217,48 @@ class CheckManager {
             // setTimeout(function () {
             //   that.bluetooth.writeBlue(sendCmd);
             // }, 50);
-          } else {//其他指令
+          } else {
             that.test = true;
             return;
+            // if (!that.checkStart&&!that.checkEnd) {
+            //   sendCmd = 'ee';
+            //   that.checkEnd =true;
+            // }else{
+            // }
+
           }
-          console.log('状态：' + received);
+         
         }
 
         setTimeout(function () {
-          if (that.sss) {
-          } else {
-            that.sss = 0;
-          }
-          if (!that.test)
-            that.sss++;
-          console.log("第" + that.sss + " 次写入");
+          // if (that.sss) {
+          
+          // } else {
+          //   that.sss = 0;
+          // }
+          // if (!that.test)
+          //   that.sss++;
+          // console.log("第" + that.sss + " 次写入");
           that.bluetooth.writeBlue(sendCmd);
         }, 50);
       } else {
-        clearInterval(that.doWhile);
-        that.bluetooth.writeBlue('ee');
-        setTimeout(function () {
-          that.bluetooth.writeBlue('ff');
-        }, 500);
+        if (received.indexOf('0xee') >= 0) {//其他指令
+          
+          setTimeout(function () {
+            that.bluetooth.writeBlue('ff');
+            // clearInterval(that);
+          }, 500);
+          return;
+        } else if (received.indexOf('0xff') >= 0) {
+          typeof that.OnCheckDataFinishListener === 'function' && that.OnCheckDataFinishListener(that.jisuan(that.resultDatas));
+          clearInterval(that);
+        } else {
+          setTimeout(function () {
+            that.bluetooth.writeBlue('ee');
+          }, 50);
+        }
       }
+      console.log('状态：' + received);
     }
   }
   search() {
@@ -258,7 +287,13 @@ class CheckManager {
   addOnFindServiceListener() {
 
   }
-  addOnDeviceCharacteristicListener() {
+  addOnCheckDataFinishListener(callback){
+    this.OnCheckDataFinishListener = callback;
+  }
+  addCheckDataProgressListener(callbakc) {
+    this.OnCheckDataProgressListener = callbakc;
+  }
+  addOnDeviceCharacteristicListener(callback) {
     this.bluetooth.addOnDeviceCharacteristicListener(callback);
   }
   addOnReceivedDataListener() {
@@ -392,6 +427,16 @@ class CheckManager {
     // });
 
   }
+  toReceiveShow(receives) {
+    if (this.readCount < this.maxLength) {
+      this.resultDatas[this.readCount++] = receives[5];
+    } else { this.stop() }
+    console.log("cout =" + this.readCount);
+    return receives[5] / 5;
+  }
+  stop() {
+    this.checkStart = false;
+  }
   removeRepait(arr) {
     let result = [];
     arr = arr.sort();
@@ -408,6 +453,13 @@ class CheckManager {
     })
     return result;
   }
+  jisuan(data){
+    let pingjun=0;
+    for(var i=0;i<data.length;i++){
+      pingjun+=data[i];
+    }
+    return pingjun / data.length;
+  }
   hex2Float(arr) {
     let valuef = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     let data = arr.split(' ');
@@ -422,7 +474,7 @@ class CheckManager {
       } else if (this.sss > 30) {
         f = f - 0.5;//模拟 符合条件 >=0.2
       }
-
+      this.sss++;
       valuef[i] = f;
       valuef[5] += f;
     }
